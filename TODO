@@ -1,0 +1,6 @@
+* Configurable path for downloaded torrents
+* Change iconset
+* Allow to mark an episode as new again (as opposed to mark it as downloaded)
+* Make torrent page into a javascript overlay window - no need to load a different page just for this
+* General error handling (display errors and messages on page, field validation, etc)
+* Ant / Maven build files
