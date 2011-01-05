@@ -15,9 +15,10 @@ import org.tbrd.mashtv.model.Show ;
 import org.tbrd.mashtv.service.ShowService ;
 
 @Controller
-@RequestMapping("/latest")
+@RequestMapping({ "/latest", "/" })
 public class LatestController {
 
+	@SuppressWarnings("unused")
 	private Log log = LogFactory.getLog(this.getClass()) ;
 
 	@Autowired(required = true)

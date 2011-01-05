@@ -2,7 +2,6 @@
 
 * {
 	font-family: Droid Sans;
-#	font-size: 14px;
 }
 
 a {
@@ -185,4 +184,8 @@ input[type=submit] {
 
 input[type=submit]:hover {
 	background-color: grey ;
+}
+
+img {
+	border: none ;
 }
