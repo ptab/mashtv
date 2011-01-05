@@ -1,0 +1,188 @@
+@CHARSET "UTF-8";
+
+* {
+	font-family: Droid Sans;
+#	font-size: 14px;
+}
+
+a {
+	text-decoration: none;
+	color: black ;
+}
+
+a:hover {
+	color: #A4C639 ;
+}
+
+html {
+	background: #E6EAE9;
+}
+
+header,nav,section,article,summary,details,aside,footer,form,input,div {
+	display: block;
+}
+
+body {
+	margin: 20px auto;
+	width: 1000px ;
+	background-color: white;
+	border: 1px solid #EDEFF2;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+}
+
+body>header {
+	margin: 20px;
+	border-bottom: 3px solid #A4C639 ;
+	overflow: hidden ;
+	position: relative ;
+}
+
+header>details {
+	font-size: 1.9em ;
+	color: #A4C639 ;
+	text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+	margin-left: 5px;
+	margin-top: 5px ;
+	margin-bottom: 5px ;
+	letter-spacing: 2px;
+}
+
+header>nav {
+	position: absolute;
+	bottom: 0px ;
+	right: 0px ;
+	font-size: 1.50em ;
+}
+
+header>nav>a {
+	display: inline-block ; ;
+	color: #A4C639 ;
+	text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+	font-size: 0.9em ;
+	padding-top: 10px ;
+	padding-bottom: 10px;
+	padding-left: 20px ;
+	padding-right: 20px ;
+}
+
+header>nav>a:hover, header>nav>a.selected {
+	background-color: #A4C639 ;
+	color: white ;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+	-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+	-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5) ;	
+}
+
+body>div.main {
+	margin: 20px ;
+	overflow: hidden ;
+}
+
+div.main>section {
+	margin-bottom: 30px ;
+	width: 45% ;
+}
+
+div.main>section.full {
+	width: 70% ;
+}
+
+div.main>section.form {
+	width: 30% ;
+}
+
+div.main>section.list {
+	width: 60% ;
+}
+
+div.main>section:nth-child(even) {
+	float: right ;
+}
+
+div.main>section:nth-child(odd) {
+	clear: both ;
+	float: left ;
+}
+
+section>header {
+	border-bottom: 1px solid #A4C639 ;
+	padding: 8px;
+	font-weight: bold ;
+}
+
+section>article {
+	margin-top: 10px ;
+	margin-left: 20px ;
+	font-size: 0.9em ;
+}
+
+section>article>details {
+	float: left;
+	font-size: 0.7em ;
+	text-transform: uppercase;
+}
+
+section>article>details>span {
+	font-size: 1.25em ;
+	font-weight: bold ;
+	margin-left: 2px;
+	margin-right: 6px;
+}
+
+section>article>summary {
+	float: left;
+}
+
+section>article>aside {
+	float: right;
+	display: table;
+	font-size: 0.7em ;
+}
+
+section>article>aside>div {
+	display: table-cell;
+	text-align: center;
+	width: 28px;
+}
+
+section>article>div {
+	clear: both;
+	font-size: 1em;
+	font-style: italic;
+}
+
+footer {
+	margin: 10px ;
+	text-align: center;
+	color: gray;
+	font-size: 0.6em ;
+}
+
+footer>a {
+	color: gray ;
+}
+
+form {
+	overflow: hidden ;
+}
+
+input[type="text"] {
+	float: left ;
+	border: 1px solid #A4C639 ;
+	padding: 5px ;
+	width: 80% ;
+}
+
+input[type=submit] {
+	float: right ;
+	background-color: #A4C639 ;
+	color: white ;
+	padding: 6px ;
+	border: none ;
+}
+
+input[type=submit]:hover {
+	background-color: grey ;
+}
