@@ -1,4 +1,4 @@
-<%@ include file="include/include.jsp" %>
+<%@ include file="include/taglibs.jsp" %>
 
 <!DOCTYPE HTML>
 <html>
@@ -13,18 +13,18 @@
 		</c:import>
 		<div class="main">
 		<section class="full">
-			<header><a href="<c:url value="/shows/${episode.show.id}"/>">${episode.show.title} - S${episode.season}E${episode.episode} - ${episode.title}</a></header>
+			<header><a href="<c:url value="/shows/${episode.show.id}"/>">${episode.show.title} - Season ${episode.season}, Episode ${episode.episode}: ${episode.title}</a></header>
 			<c:choose>
 				<c:when test="${!empty episode.torrents}">
 					<c:forEach items="${episode.torrents}" var="torrent">
 						<article>
-							<summary>${torrent.url}</summary>
+							<summary>${torrent.filename}</summary>
 							<aside>
-								<div><c:if test="${torrent.hd}"><img src="<c:url value="/resources/hd.png"/>" alt="Content in 720p"/></c:if></div>
-								<div><a href="<c:url value="/shows/${episode.show.id}/download/${episode.season}/${episode.episode}/${torrent.id}"/>"><img src="<c:url value="/resources/transmission.png"/>" alt="Start download on transmission"/></a></div>
-								<div><a href="<c:url value="${torrent.url}"/>"><img src="<c:url value="/resources/bittorrent.gif"/>" alt="Download torrent file"/></a></div>
+								<c:if test="${torrent.hd}"><img src="<c:url value="/resources/img/television.png"/>" alt="hd" title="Content in HD"/></c:if>
+								<a href="<c:url value="/shows/${episode.show.id}/download/${episode.season}/${episode.episode}/${torrent.id}"/>"><img src="<c:url value="/resources/img/drive--plus.png"/>" alt="download" title="Download to torrents folder"/></a>
+								<a href="<c:url value="${torrent.url}"/>"><img src="<c:url value="/resources/img/globe--arrow.png"/>" alt="follow" title="Follow the link on this feed item"/></a>
 							</aside>
-							<div></div>
+							<!-- <div></div>-->
 						</article>
 					</c:forEach>
 				</c:when>

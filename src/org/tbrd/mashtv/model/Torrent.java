@@ -19,13 +19,19 @@ public class Torrent implements Comparable<Torrent> {
 
 	private String url ;
 
+	private String filename ;
+
 	public Torrent() {
 	}
 
-	public Torrent(Episode episode, String torrent, boolean hd) {
+	public Torrent(Episode episode, String filename, String torrent, boolean hd) {
 		setEpisode(episode) ;
-		setUrl(torrent) ;
+		setFilename(filename) ;
 		setHd(hd) ;
+		if (torrent.contains("btjunkie"))
+			setUrl("http://dl." + torrent.substring(7) + "/download.torrent") ;
+		else
+			setUrl(torrent) ;
 	}
 
 	public int getId() {
@@ -58,6 +64,14 @@ public class Torrent implements Comparable<Torrent> {
 
 	public void setEpisode(Episode episode) {
 		this.episode = episode ;
+	}
+
+	public String getFilename() {
+		return filename ;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename ;
 	}
 
 	@Override
