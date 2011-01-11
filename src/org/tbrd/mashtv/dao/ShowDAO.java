@@ -25,6 +25,13 @@ public class ShowDAO extends GenericDAO<Show, Integer> {
 		return (Show) query.uniqueResult() ;
 	}
 
+	public Show getEager(String show_title) {
+		Query query = getSession().createQuery(
+				"FROM " + Show.class.getName() + " s WHERE upper(s.title) = upper(:title)") ;
+		query.setParameter("title", show_title) ;
+		return (Show) query.uniqueResult() ;
+	}
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Show> getAll() {

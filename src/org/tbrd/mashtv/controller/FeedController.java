@@ -126,7 +126,7 @@ public class FeedController {
 		matcher = pattern.matcher(entry.getTitle()) ;
 		hd = matcher.find() ;
 
-		Show show = shows.getShow(show_title) ;
+		Show show = shows.getShowEager(show_title) ;
 		if (show == null) {
 			log.debug(show_title + " is not on the list - ignoring.") ;
 			return ;
@@ -138,7 +138,7 @@ public class FeedController {
 
 		if (episode.getTitle().equals("Unknown title"))
 			episode.fetchTitle() ;
-		Torrent torrent = new Torrent(episode, entry.getLink(), hd) ;
+		Torrent torrent = new Torrent(episode, entry.getTitle(), entry.getLink(), hd) ;
 		if (!episode.getTorrents().contains(torrent))
 			episode.addTorrent(torrent) ;
 

@@ -157,13 +157,6 @@ public class Episode implements Comparable<Episode>, Serializable {
 		this.torrents = torrents ;
 	}
 
-	public void addTorrent(String url, boolean hd) {
-		if (url.contains("btjunkie"))
-			addTorrent(new Torrent(this, "http://dl." + url.substring(7) + "/download.torrent", hd)) ;
-		else
-			addTorrent(new Torrent(this, url, hd)) ;
-	}
-
 	public void addTorrent(Torrent torrent) {
 		torrents.add(torrent) ;
 	}

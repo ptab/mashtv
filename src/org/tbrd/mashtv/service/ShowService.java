@@ -37,6 +37,14 @@ public class ShowService {
 	}
 
 	@Transactional(readOnly = true)
+	public Show getShowEager(String show_title) {
+		Show show = showDAO.get(show_title) ;
+		if (show != null)
+			show.getEpisodes().size() ;
+		return show ;
+	}
+
+	@Transactional(readOnly = true)
 	public List<Show> getShows() {
 		return showDAO.getAll() ;
 	}
@@ -69,5 +77,10 @@ public class ShowService {
 	@Transactional
 	public void saveEpisode(Episode episode) {
 		episodeDAO.save(episode) ;
+	}
+
+	@Transactional
+	public void removeEpisode(Episode episode) {
+		episodeDAO.delete(episode) ;
 	}
 }

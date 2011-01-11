@@ -8,6 +8,8 @@ import java.nio.channels.Channels ;
 import java.nio.channels.ReadableByteChannel ;
 import java.util.Map ;
 
+import javax.servlet.http.HttpServletRequest ;
+
 import org.apache.commons.logging.Log ;
 import org.apache.commons.logging.LogFactory ;
 import org.springframework.beans.factory.annotation.Autowired ;
@@ -73,32 +75,38 @@ public class ShowController {
 
 	@RequestMapping("/{show}/toggle/{season}/{episode}")
 	public String toggleWatched(@PathVariable("show") Integer show, @PathVariable("season") Integer season,
-			@PathVariable("episode") Integer episode) {
+			@PathVariable("episode") Integer episode, HttpServletRequest request) {
+		String redirect = getRedirect(request) ;
+
 		Show s = shows.getShow(show) ;
 		if (s == null) {
 			log.error("No show with id " + show) ;
-			return "redirect:/shows" ;
+			return "redirect:/" + redirect ;
 		}
 
 		Episode ep = shows.getEpisode(s, season, episode) ;
 		if (ep == null) {
 			log.error("No episode on " + s.getTitle() + " with season " + season + " and episode " + episode) ;
-			return "redirect:/shows" ;
+			return "redirect:/" + redirect ;
 		}
 
 		ep.setDownloaded(!ep.isDownloaded()) ;
 		shows.saveEpisode(ep) ;
 		log.info(ep.toString() + " was set as " + (ep.isDownloaded() ? "downloaded" : "not downloaded")) ;
-		return "redirect:/shows" ;
+		return "redirect:/" + redirect ;
 	}
 
 	@RequestMapping("/{show}/download/{season}/{episode}/{torrent}")
 	public String download(@PathVariable("show") Integer show, @PathVariable("season") Integer season,
-			@PathVariable("episode") Integer episode, @PathVariable("torrent") Integer torrent) {
+			@PathVariable("episode") Integer episode, @PathVariable("torrent") Integer torrent,
+			HttpServletRequest request) {
+
+		String redirect = getRedirect(request) ;
+
 		Episode ep = getEpisode(show, season, episode) ;
 		if (ep == null) {
 			log.error("No episode with show " + show + ", season " + season + " and episode " + episode) ;
-			return "redirect:/shows" ;
+			return "redirect:/" + redirect ;
 		}
 
 		Torrent t = ep.getTorrent(torrent) ;
@@ -113,17 +121,19 @@ public class ShowController {
 		catch (MalformedURLException e) {
 			e.printStackTrace() ;
 			log.error("Error downloading " + ep.toString()) ;
+			return "redirect:/" + redirect ;
 		}
 		catch (IOException e) {
 			e.printStackTrace() ;
 			log.error("Error downloading " + ep.toString()) ;
+			return "redirect:/" + redirect ;
 		}
 
 		ep.setDownloaded(true) ;
 		shows.saveEpisode(ep) ;
 		log.info(ep.toString() + " downloaded!") ;
 
-		return "redirect:/latest" ;
+		return "redirect:/" + redirect ;
 	}
 
 	@RequestMapping("/{show}/torrents/{season}/{episode}")
@@ -139,6 +149,22 @@ public class ShowController {
 		return "torrents" ;
 	}
 
+	@RequestMapping("/{show}/delete/{season}/{episode}")
+	public String delete(@PathVariable("show") Integer show, @PathVariable("season") Integer season,
+			@PathVariable("episode") Integer episode, Map<String, Object> map, HttpServletRequest request) {
+		String redirect = getRedirect(request) ;
+
+		Episode ep = getEpisode(show, season, episode) ;
+		if (ep == null) {
+			log.error("No episode with show " + show + ", season " + season + " and episode " + episode) ;
+			return "redirect:/" + redirect ;
+		}
+
+		shows.removeEpisode(ep) ;
+		log.info("Removed episode: " + ep.toString()) ;
+		return "redirect:/" + redirect ;
+	}
+
 	private Episode getEpisode(int show, int season, int episode) {
 		Show s = shows.getShow(show) ;
 		if (s == null) {
@@ -150,5 +176,15 @@ public class ShowController {
 		if (ep == null)
 			log.info("Show " + s.getTitle() + " has no season " + season + " or episode " + episode) ;
 		return ep ;
+	}
+
+	private String getRedirect(HttpServletRequest request) {
+		log.info("referer: " + request.getHeader("Referer")) ;
+
+		String referer = request.getHeader("Referer") ;
+		if (referer.contains("/shows/"))
+			return "shows" ;
+
+		return "latest" ;
 	}
 }
