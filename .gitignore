@@ -3,4 +3,4 @@ build
 .settings
 .classpath
 .project
-
+war/WEB-INF/classes
