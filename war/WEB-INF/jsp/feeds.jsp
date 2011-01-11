@@ -1,4 +1,4 @@
-<%@ include file="include/include.jsp" %>
+<%@ include file="include/taglibs.jsp" %>
 
 <!DOCTYPE HTML>
 <html>
@@ -29,10 +29,9 @@
 						<article>
 							<summary><a href="<c:url value="${feed.url}"/>">${feed.url}</a></summary>
 							<aside>
-								<div><a href="<c:url value="/feeds/load/${feed.id}"/>">load</a></div>
-								<div><a href="<c:url value="/feeds/delete/${feed.id}"/>">delete</a></div>
+								<a href="<c:url value="/feeds/load/${feed.id}"/>">load</a>
+								<a href="<c:url value="/feeds/delete/${feed.id}"/>"><img src="<c:url value="/resources/img/minus.png" />" alt="delete" /></a>
 							</aside>
-							<div> </div>
 						</article> 
 					</c:forEach>
 				</c:when>

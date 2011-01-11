@@ -1,4 +1,4 @@
-<%@ include file="include/include.jsp" %>
+<%@ include file="include/taglibs.jsp" %>
 
 <!DOCTYPE HTML>
 <html>
@@ -8,8 +8,8 @@
 	</head>
 	<body>
 		<c:import url="include/header.jsp">
-			<c:param value="shows" name="page"/>
-			<c:param value="Shows" name="title" />
+			<c:param name="page" value="shows" />
+			<c:param name="title" value="Shows" />
 		</c:import>
 		<div class="main">
 			<section class="form">
@@ -28,8 +28,7 @@
 						<c:forEach items="${showList}" var="show">
 							<article>
 								<summary><a href="<c:url value="/shows/${show.id}"/>">${show.title}</a></summary>
-								<aside><a href="<c:url value="/shows/delete/${show.id}"/>">delete</a></aside>
-								<div> </div>
+								<aside><a href="<c:url value="/shows/delete/${show.id}"/>"><img src="<c:url value="/resources/img/minus.png" />" alt="delete" title="Delete this show" /></a></aside>
 							</article> 
 						</c:forEach>
 					</c:when>

@@ -1,8 +1,6 @@
-<%@ include file="include.jsp" %>
+<%@ include file="taglibs.jsp" %>
 
 <header>
-	<!-- <img class="logo" src="<c:url value="/resources/rss-50.png"/>" alt="logo"/>-->
-	<!-- <div class="logo">séries para download</div>-->
 	<details>${param.title}</details>
 	<nav>
 		<a class="<c:if test="${param.page == 'latest'}">selected</c:if>" href="<c:url value="/latest"/>">latest</a>
