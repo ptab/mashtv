@@ -1,4 +1,4 @@
-package me.taborda.mashtv.dao ;
+package me.taborda.mashtv.repository ;
 
 import java.util.List ;
 

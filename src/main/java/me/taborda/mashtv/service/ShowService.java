@@ -2,14 +2,15 @@ package me.taborda.mashtv.service ;
 
 import java.util.List ;
 
-import me.taborda.mashtv.dao.EpisodeDAO ;
-import me.taborda.mashtv.dao.ShowDAO ;
 import me.taborda.mashtv.model.Episode ;
 import me.taborda.mashtv.model.Show ;
 
 import org.springframework.beans.factory.annotation.Autowired ;
 import org.springframework.stereotype.Service ;
 import org.springframework.transaction.annotation.Transactional ;
+
+import me.taborda.mashtv.repository.EpisodeDAO ;
+import me.taborda.mashtv.repository.ShowDAO ;
 
 @Service
 public class ShowService {

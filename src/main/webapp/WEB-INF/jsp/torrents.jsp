@@ -20,9 +20,9 @@
 						<article>
 							<summary>${torrent.filename}</summary>
 							<aside>
-								<c:if test="${torrent.hd}"><img src="<c:url value="/img/television.png"/>" alt="hd" title="Content in HD"/></c:if>
-								<a href="<c:url value="/shows/${episode.show.id}/download/${episode.season}/${episode.episode}/${torrent.id}"/>"><img src="<c:url value="/img/drive--plus.png"/>" alt="download" title="Download to torrents folder"/></a>
-								<a href="<c:url value="${torrent.url}"/>"><img src="<c:url value="/img/globe--arrow.png"/>" alt="follow" title="Follow the link on this feed item"/></a>
+								<c:if test="${torrent.hd}"><img src="<c:url value="/resources/img/television.png"/>" alt="hd" title="Content in HD"/></c:if>
+								<a href="<c:url value="/shows/${episode.show.id}/download/${episode.season}/${episode.episode}/${torrent.id}"/>"><img src="<c:url value="/resources/img/drive--plus.png"/>" alt="download" title="Download to torrents folder"/></a>
+								<a href="<c:url value="${torrent.url}"/>"><img src="<c:url value="/resources/img/globe--arrow.png"/>" alt="follow" title="Follow the link on this feed item"/></a>
 							</aside>
 						</article>
 					</c:forEach>

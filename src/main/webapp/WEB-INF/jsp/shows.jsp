@@ -28,7 +28,7 @@
 						<c:forEach items="${showList}" var="show">
 							<article>
 								<summary><a href="<c:url value="/shows/${show.id}"/>">${show.title}</a></summary>
-								<aside><a href="<c:url value="/shows/delete/${show.id}"/>"><img src="<c:url value="/img/minus.png" />" alt="delete" title="Delete this show" /></a></aside>
+								<aside><a href="<c:url value="/shows/delete/${show.id}"/>"><img src="<c:url value="/resources/img/minus.png" />" alt="delete" title="Delete this show" /></a></aside>
 							</article> 
 						</c:forEach>
 					</c:when>

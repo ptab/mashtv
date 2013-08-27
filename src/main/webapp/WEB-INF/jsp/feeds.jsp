@@ -30,7 +30,7 @@
 							<summary><a href="<c:url value="${feed.url}"/>">${feed.url}</a></summary>
 							<aside>
 								<a href="<c:url value="/feeds/load/${feed.id}"/>">load</a>
-								<a href="<c:url value="/feeds/delete/${feed.id}"/>"><img src="<c:url value="/img/minus.png" />" alt="delete" /></a>
+								<a href="<c:url value="/feeds/delete/${feed.id}"/>"><img src="<c:url value="/resources/img/minus.png" />" alt="delete" /></a>
 							</aside>
 						</article> 
 					</c:forEach>

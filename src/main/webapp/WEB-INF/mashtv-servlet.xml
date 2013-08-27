@@ -9,42 +9,9 @@
         http://www.springframework.org/schema/context/spring-context-3.0.xsd
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-    <context:annotation-config />
-
-    <context:component-scan base-package="me.taborda.mashtv" />
-
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/jsp/" />
         <property name="suffix" value=".jsp" />
     </bean>
 
-    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" p:location="/WEB-INF/mashtv.properties" />
-
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
-        <property name="driverClass" value="${jdbc.driver}" />
-        <property name="url" value="${jdbc.url}" />
-        <property name="username" value="${jdbc.username}" />
-        <property name="password" value="${jdbc.password}" />
-    </bean>
-
-    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
-        <property name="dataSource" ref="dataSource" />
-        <property name="hibernateProperties">
-            <props>
-                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
-                <prop key="hibernate.show_sql">false</prop>
-                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
-            </props>
-        </property>
-        <property name="packagesToScan">
-            <list>
-                <value>me.taborda.mashtv.model</value>
-            </list>
-        </property>
-    </bean>
-
-    <tx:annotation-driven />
-    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
-        <property name="sessionFactory" ref="sessionFactory" />
-    </bean>
 </beans>
