@@ -1,4 +1,4 @@
-package me.taborda.mashtv.repository ;
+package me.taborda.mashtv.dao ;
 
 import me.taborda.mashtv.model.Feed ;
 

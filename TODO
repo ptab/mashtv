@@ -1,7 +1,12 @@
+FEATURES
 * Configurable path for downloaded torrents
 * Change iconset
 * Allow to mark an episode as new again (as opposed to mark it as downloaded)
 * Make torrent page into a javascript overlay window - no need to load a different page just for this
 * General error handling (display errors and messages on page, field validation, etc)
+
+CODE
 * Introduce spring-data
+* Use java-based configuration instead of XML based
+* separation of concerns - logic is spread between controller, service and model. everything should be unified in services
 * Unit testing

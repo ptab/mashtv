@@ -2,19 +2,25 @@ package me.taborda.mashtv.model ;
 
 import javax.persistence.Entity ;
 import javax.persistence.ManyToOne ;
+import javax.validation.constraints.NotNull ;
+import javax.validation.constraints.Size ;
 
 @Entity
 public class Torrent extends AbstractEntity implements Comparable<Torrent> {
 
     private static final long serialVersionUID = 1L ;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Episode episode ;
 
     private boolean hd ;
 
+    @NotNull
+    @Size(min = 1)
     private String url ;
 
+    @NotNull
+    @Size(min = 1)
     private String filename ;
 
     public Torrent() {

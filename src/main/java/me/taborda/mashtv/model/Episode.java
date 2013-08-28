@@ -15,11 +15,15 @@ import javax.persistence.Entity ;
 import javax.persistence.FetchType ;
 import javax.persistence.ManyToOne ;
 import javax.persistence.OneToMany ;
+import javax.validation.constraints.Min ;
+import javax.validation.constraints.NotNull ;
+import javax.validation.constraints.Size ;
 
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-import me.taborda.mashtv.Util ;
+import me.taborda.mashtv.util.Util ;
+
 
 @Entity
 public class Episode extends AbstractEntity implements Comparable<Episode> {
@@ -28,13 +32,17 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
 
     private static final Logger LOG = LoggerFactory.getLogger(Episode.class) ;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Show show ;
 
+    @Min(1)
     private int season ;
 
+    @Min(1)
     private int episode ;
 
+    @NotNull
+    @Size(min = 1)
     private String title ;
 
     private boolean downloaded ;
@@ -59,11 +67,17 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
     public void fetchTitle() {
         StringBuilder builder = new StringBuilder() ;
 
+        URL url = null ;
         try {
-            URL url = new URL("http://services.tvrage.com/tools/quickinfo.php?show="
+            url = new URL("http://services.tvrage.com/tools/quickinfo.php?show="
                             + Util.fixString(getShow().getTitle()).replaceFirst("The ", "").replace(" ", "") + "&ep=" + getSeason() + "x" + episode) ;
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream())) ;
+        } catch (MalformedURLException e) {
+            LOG.error("Could not build URL", e) ;
+            title = "Unknown title" ;
+            return ;
+        }
 
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()))) {
             LOG.debug("url: " + url.toString()) ;
             String line ;
 
@@ -71,13 +85,8 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
                 builder.append(line) ;
 
             in.close() ;
-        }
-        catch (MalformedURLException e) {
-            e.printStackTrace() ;
-            title = "Unknown title" ;
-        }
-        catch (IOException e) {
-            e.printStackTrace() ;
+        } catch (IOException e) {
+            LOG.error("Could not read from stream", e) ;
             title = "Unknown title" ;
         }
 

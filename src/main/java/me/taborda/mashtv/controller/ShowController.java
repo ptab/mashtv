@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod ;
 import me.taborda.mashtv.model.Episode ;
 import me.taborda.mashtv.model.Show ;
 import me.taborda.mashtv.model.Torrent ;
+import me.taborda.mashtv.service.EpisodeService ;
 import me.taborda.mashtv.service.ShowService ;
 
 @Controller
@@ -30,46 +31,49 @@ public class ShowController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ShowController.class) ;
 
-    @Autowired(required = true)
+    @Autowired
     private ShowService shows ;
+
+    @Autowired
+    private EpisodeService episodes ;
 
     @RequestMapping("")
     public String list(final Map<String, Object> map) {
         map.put("show", new Show()) ;
-        map.put("showList", shows.getShows()) ;
+        map.put("showList", shows.findAll()) ;
         return "shows" ;
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String add(@ModelAttribute("show") final Show show) {
-        shows.saveShow(show) ;
+        shows.save(show) ;
         LOG.info("Added TVShow: " + show.getTitle()) ;
         return "redirect:/shows" ;
     }
 
     @RequestMapping("/delete/{id}")
     public String delete(@PathVariable("id") final Integer id) {
-        Show show = shows.getShow(id) ;
+        Show show = shows.find(id) ;
         if (show == null) {
             LOG.error("No show with id " + id) ;
             return "redirect:/shows" ;
         }
 
-        shows.removeShow(show) ;
+        shows.delete(show) ;
         LOG.info("Removed TVShow: " + show.getTitle()) ;
         return "redirect:/shows" ;
     }
 
     @RequestMapping("/{id}")
     public String getShow(@PathVariable("id") final Integer id, final Map<String, Object> map) {
-        Show show = shows.getShow(id) ;
+        Show show = shows.find(id) ;
         if (show == null) {
             LOG.error("No show with id " + id) ;
             return "redirect:/shows" ;
         }
 
         map.put("show", show) ;
-        map.put("episodes", shows.getEpisodes(show)) ;
+        map.put("episodes", episodes.findAll(show)) ;
         return "episodes" ;
     }
 
@@ -78,20 +82,20 @@ public class ShowController {
                     @PathVariable("episode") final Integer episode, final HttpServletRequest request) {
         String redirect = getRedirect(request) ;
 
-        Show s = shows.getShow(show) ;
+        Show s = shows.find(show) ;
         if (s == null) {
             LOG.error("No show with id " + show) ;
             return "redirect:/" + redirect ;
         }
 
-        Episode ep = shows.getEpisode(s, season, episode) ;
+        Episode ep = episodes.find(s, season, episode) ;
         if (ep == null) {
             LOG.error("No episode on " + s.getTitle() + " with season " + season + " and episode " + episode) ;
             return "redirect:/" + redirect ;
         }
 
         ep.setDownloaded(!ep.isDownloaded()) ;
-        shows.saveEpisode(ep) ;
+        episodes.save(ep) ;
         LOG.info(ep.toString() + " was set as " + (ep.isDownloaded() ? "downloaded" : "not downloaded")) ;
         return "redirect:/" + redirect ;
     }
@@ -109,27 +113,27 @@ public class ShowController {
         }
 
         Torrent t = ep.getTorrent(torrent) ;
+
+        URL tor ;
         try {
-            URL tor = new URL(t.getUrl()) ;
-            ReadableByteChannel rbc = Channels.newChannel(tor.openStream()) ;
-            FileOutputStream fos = new FileOutputStream("/home/tab/testes/" + ep.toShortString() + ".torrent") ;
-            fos.getChannel().transferFrom(rbc, 0, 1 << 24) ;
-            fos.close() ;
-            rbc.close() ;
-        }
-        catch (MalformedURLException e) {
+            tor = new URL(t.getUrl()) ;
+        } catch (MalformedURLException e) {
             e.printStackTrace() ;
             LOG.error("Error downloading " + ep.toString()) ;
             return "redirect:/" + redirect ;
         }
-        catch (IOException e) {
+
+        try (FileOutputStream fos = new FileOutputStream("/home/tab/testes/" + ep.toShortString() + ".torrent");
+                        ReadableByteChannel rbc = Channels.newChannel(tor.openStream())) {
+            fos.getChannel().transferFrom(rbc, 0, 1 << 24) ;
+        } catch (IOException e) {
             e.printStackTrace() ;
             LOG.error("Error downloading " + ep.toString()) ;
             return "redirect:/" + redirect ;
         }
 
         ep.setDownloaded(true) ;
-        shows.saveEpisode(ep) ;
+        episodes.save(ep) ;
         LOG.info(ep.toString() + " downloaded!") ;
 
         return "redirect:/" + redirect ;
@@ -159,19 +163,19 @@ public class ShowController {
             return "redirect:/" + redirect ;
         }
 
-        shows.removeEpisode(ep) ;
+        episodes.delete(ep) ;
         LOG.info("Removed episode: " + ep.toString()) ;
         return "redirect:/" + redirect ;
     }
 
     private Episode getEpisode(final int show, final int season, final int episode) {
-        Show s = shows.getShow(show) ;
+        Show s = shows.find(show) ;
         if (s == null) {
             LOG.error("No show with id " + show) ;
             return null ;
         }
 
-        Episode ep = shows.getEpisode(s, season, episode) ;
+        Episode ep = episodes.find(s, season, episode) ;
         if (ep == null)
             LOG.info("Show " + s.getTitle() + " has no season " + season + " or episode " + episode) ;
         return ep ;

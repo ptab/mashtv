@@ -1,8 +1,9 @@
-package me.taborda.mashtv.repository ;
+package me.taborda.mashtv.dao ;
 
 import java.util.List ;
 
-import org.hibernate.Query ;
+import javax.persistence.Query ;
+
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 import org.springframework.stereotype.Repository ;
@@ -20,20 +21,19 @@ public class ShowDAO extends AbstractDAO<Show, Integer> {
     }
 
     public Show get(final String show_title) {
-        Query query = getSession().createQuery("FROM " + Show.class.getName() + " s WHERE upper(s.title) = upper(:title)") ;
+        Query query = getEntityManager().createQuery("FROM " + Show.class.getName() + " s WHERE upper(s.title) = upper(:title)") ;
         query.setParameter("title", show_title) ;
-        return (Show) query.uniqueResult() ;
+        return (Show) query.getSingleResult() ;
     }
 
     public Show getEager(final String show_title) {
-        Query query = getSession().createQuery("FROM " + Show.class.getName() + " s WHERE upper(s.title) = upper(:title)") ;
+        Query query = getEntityManager().createQuery("FROM " + Show.class.getName() + " s WHERE upper(s.title) = upper(:title)") ;
         query.setParameter("title", show_title) ;
-        return (Show) query.uniqueResult() ;
+        return (Show) query.getSingleResult() ;
     }
 
     @Override
     public List<Show> getAll() {
-        Query query = getSession().createQuery("FROM " + Show.class.getName() + " ORDER BY title ASC") ;
-        return query.list() ;
+        return getEntityManager().createQuery("FROM " + Show.class.getName() + " ORDER BY title ASC").getResultList() ;
     }
 }

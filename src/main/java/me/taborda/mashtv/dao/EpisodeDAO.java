@@ -1,13 +1,15 @@
-package me.taborda.mashtv.repository ;
+package me.taborda.mashtv.dao ;
 
 import java.util.List ;
 
-import org.hibernate.Query ;
+import javax.persistence.Query ;
+
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 import org.springframework.stereotype.Repository ;
 
-import me.taborda.mashtv.Util ;
+import me.taborda.mashtv.util.Util ;
+
 import me.taborda.mashtv.model.Episode ;
 import me.taborda.mashtv.model.Show ;
 
@@ -21,13 +23,13 @@ public class EpisodeDAO extends AbstractDAO<Episode, Integer> {
     }
 
     public Episode get(final Show show, final int season_number, final int episode_number) {
-        Query query = getSession()
+        Query query = getEntityManager()
                         .createQuery("FROM " + Episode.class.getName()
                                         + " e WHERE e.show = :show AND e.season = :season AND e.episode = :episode ORDER BY e.season, e.episode DESC") ;
         query.setParameter("show", show) ;
         query.setParameter("season", season_number) ;
         query.setParameter("episode", episode_number) ;
-        List<Episode> episodes = query.list() ;
+        List<Episode> episodes = query.getResultList() ;
         if (episodes == null || episodes.size() == 0)
             return null ;
         if (episodes.size() > 1) {
@@ -41,16 +43,18 @@ public class EpisodeDAO extends AbstractDAO<Episode, Integer> {
     }
 
     public List<Episode> get(final Show show) {
-        Query query = getSession().createQuery("FROM " + Episode.class.getName() + " e WHERE e.show = :show ORDER BY e.season DESC, e.episode DESC") ;
+        Query query = getEntityManager().createQuery(
+                        "FROM " + Episode.class.getName() + " e WHERE e.show = :show ORDER BY e.season DESC, e.episode DESC") ;
         query.setParameter("show", show) ;
-        return query.list() ;
+        return query.getResultList() ;
     }
 
     public List<Episode> getLatestEpisodes(final Show show, final int quantity) {
-        Query query = getSession().createQuery("FROM " + Episode.class.getName() + " e WHERE e.show = :show ORDER BY e.season DESC, e.episode DESC") ;
+        Query query = getEntityManager().createQuery(
+                        "FROM " + Episode.class.getName() + " e WHERE e.show = :show ORDER BY e.season DESC, e.episode DESC") ;
         query.setParameter("show", show) ;
         query.setMaxResults(quantity) ;
-        return query.list() ;
+        return query.getResultList() ;
     }
 
 }

@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory ;
 import org.springframework.beans.factory.annotation.Autowired ;
 import org.springframework.stereotype.Controller ;
 import org.springframework.transaction.annotation.Transactional ;
-import org.springframework.validation.BindingResult ;
 import org.springframework.web.bind.annotation.ModelAttribute ;
 import org.springframework.web.bind.annotation.PathVariable ;
 import org.springframework.web.bind.annotation.RequestMapping ;
@@ -24,11 +23,13 @@ import com.sun.syndication.io.FeedException ;
 import com.sun.syndication.io.SyndFeedInput ;
 import com.sun.syndication.io.XmlReader ;
 
-import me.taborda.mashtv.Util ;
+import me.taborda.mashtv.util.Util ;
+
 import me.taborda.mashtv.model.Episode ;
 import me.taborda.mashtv.model.Feed ;
 import me.taborda.mashtv.model.Show ;
 import me.taborda.mashtv.model.Torrent ;
+import me.taborda.mashtv.service.EpisodeService ;
 import me.taborda.mashtv.service.FeedService ;
 import me.taborda.mashtv.service.ShowService ;
 
@@ -39,10 +40,13 @@ public class FeedController {
     private static final Logger LOG = LoggerFactory.getLogger(FeedController.class) ;
 
     @Autowired
-    public FeedService feeds ;
+    private FeedService feeds ;
 
     @Autowired
-    public ShowService shows ;
+    private ShowService shows ;
+
+    @Autowired
+    private EpisodeService episodes ;
 
     @RequestMapping(value = "")
     public String list(final Map<String, Object> map) {
@@ -52,7 +56,7 @@ public class FeedController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String add(@ModelAttribute("feed") final Feed feed, final BindingResult result) {
+    public String add(@ModelAttribute("feed") final Feed feed) {
         feeds.save(feed) ;
         loadFeed(feed.getUrl()) ;
         return "redirect:/feeds" ;
@@ -71,8 +75,7 @@ public class FeedController {
         if (feed != null) {
             feeds.delete(feed) ;
             LOG.info("Removed feed: " + feed.getUrl()) ;
-        }
-        else
+        } else
             LOG.info("No feed with id " + id) ;
 
         return "redirect:/feeds" ;
@@ -85,17 +88,13 @@ public class FeedController {
             SyndFeed sf = input.build(new XmlReader(feedSource)) ;
             for (Object o : sf.getEntries())
                 addItem((SyndEntry) o) ;
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             e.printStackTrace() ;
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             e.printStackTrace() ;
-        }
-        catch (FeedException e) {
+        } catch (FeedException e) {
             e.printStackTrace() ;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace() ;
         }
     }
@@ -118,23 +117,22 @@ public class FeedController {
 
             season_number = new Integer(matcher.group(2)).intValue() ;
             episode_number = new Integer(matcher.group(3)).intValue() ;
-        }
-        else
+        } else
             return ;
 
         pattern = Pattern.compile("720[pP]") ;
         matcher = pattern.matcher(entry.getTitle()) ;
         hd = matcher.find() ;
 
-        Show show = shows.getShowEager(show_title) ;
+        Show show = shows.find(show_title) ;
         if (show == null) {
             LOG.debug(show_title + " is not on the list - ignoring.") ;
             return ;
         }
 
-        Episode episode = shows.getEpisode(show, season_number, episode_number) ;
+        Episode episode = episodes.find(show, season_number, episode_number) ;
         if (episode == null)
-            episode = new Episode(show, season_number, episode_number) ;
+            episode = episodes.create(show, season_number, episode_number) ;
 
         if (episode.getTitle().equals("Unknown title"))
             episode.fetchTitle() ;
@@ -142,8 +140,7 @@ public class FeedController {
         if (!episode.getTorrents().contains(torrent))
             episode.addTorrent(torrent) ;
 
-        show.getEpisodes().add(episode) ;
-        shows.saveShow(show) ;
+        episodes.save(episode) ;
         LOG.info("Added episode: " + episode.toString()) ;
     }
 }

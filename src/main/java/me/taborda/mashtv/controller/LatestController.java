@@ -1,6 +1,5 @@
 package me.taborda.mashtv.controller ;
 
-import java.util.ArrayList ;
 import java.util.HashMap ;
 import java.util.List ;
 import java.util.Map ;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping ;
 
 import me.taborda.mashtv.model.Episode ;
 import me.taborda.mashtv.model.Show ;
+import me.taborda.mashtv.service.EpisodeService ;
 import me.taborda.mashtv.service.ShowService ;
 
 @Controller
@@ -25,16 +25,16 @@ public class LatestController {
     @Autowired(required = true)
     public ShowService shows ;
 
+    @Autowired(required = true)
+    public EpisodeService episodes ;
+
     @RequestMapping(value = "")
     public String list(final Map<String, Object> map) {
-        Map<Integer, List<Episode>> latest = new HashMap<>() ;
-        List<Show> ss = shows.getShows() ;
+        Map<Long, List<Episode>> latest = new HashMap<>() ;
+        List<Show> ss = shows.findAll() ;
 
-        for (Show s : ss) {
-            List<Episode> episodes = new ArrayList<>() ;
-            episodes.addAll(shows.getLatestEpisodes(s, 3)) ;
-            latest.put(s.getId(), episodes) ;
-        }
+        for (Show s : ss)
+            latest.put(s.getId(), episodes.findLatest(s, 3)) ;
 
         map.put("shows", ss) ;
         map.put("latest", latest) ;

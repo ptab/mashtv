@@ -5,6 +5,7 @@ import java.io.Serializable ;
 import javax.persistence.GeneratedValue ;
 import javax.persistence.Id ;
 import javax.persistence.MappedSuperclass ;
+import javax.persistence.Version ;
 
 @MappedSuperclass
 public abstract class AbstractEntity implements Serializable {
@@ -13,14 +14,16 @@ public abstract class AbstractEntity implements Serializable {
 
     @Id
     @GeneratedValue
-    private Integer id ;
+    private Long id ;
 
-    public Integer getId() {
+    @Version
+    private Long version ;
+
+    public Long getId() {
         return id ;
     }
 
-    @SuppressWarnings("unused")
-    private void setId(final Integer id) {
-        this.id = id ;
+    public Long getVersion() {
+        return version ;
     }
 }
