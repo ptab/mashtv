@@ -1,11 +1,12 @@
 package me.taborda.mashtv.controller ;
 
 import java.io.IOException ;
-import java.net.MalformedURLException ;
 import java.net.URL ;
-import java.util.Map ;
+import java.util.List ;
 import java.util.regex.Matcher ;
 import java.util.regex.Pattern ;
+
+import javax.validation.Valid ;
 
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
@@ -13,17 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired ;
 import org.springframework.stereotype.Controller ;
 import org.springframework.transaction.annotation.Transactional ;
 import org.springframework.web.bind.annotation.ModelAttribute ;
-import org.springframework.web.bind.annotation.PathVariable ;
 import org.springframework.web.bind.annotation.RequestMapping ;
 import org.springframework.web.bind.annotation.RequestMethod ;
+import org.springframework.web.bind.annotation.ResponseBody ;
 
 import com.sun.syndication.feed.synd.SyndEntry ;
 import com.sun.syndication.feed.synd.SyndFeed ;
 import com.sun.syndication.io.FeedException ;
 import com.sun.syndication.io.SyndFeedInput ;
 import com.sun.syndication.io.XmlReader ;
-
-import me.taborda.mashtv.util.Util ;
 
 import me.taborda.mashtv.model.Episode ;
 import me.taborda.mashtv.model.Feed ;
@@ -32,10 +31,11 @@ import me.taborda.mashtv.model.Torrent ;
 import me.taborda.mashtv.service.EpisodeService ;
 import me.taborda.mashtv.service.FeedService ;
 import me.taborda.mashtv.service.ShowService ;
+import me.taborda.mashtv.util.Util ;
 
 @Controller
 @RequestMapping("/feeds")
-public class FeedController {
+public class FeedController extends AbstractController {
 
     private static final Logger LOG = LoggerFactory.getLogger(FeedController.class) ;
 
@@ -48,60 +48,48 @@ public class FeedController {
     @Autowired
     private EpisodeService episodes ;
 
-    @RequestMapping(value = "")
-    public String list(final Map<String, Object> map) {
-        map.put("feed", new Feed()) ;
-        map.put("feedList", feeds.getAll()) ;
+    @RequestMapping
+    public String feeds() {
         return "feeds" ;
     }
 
+    @RequestMapping(value = "/list")
+    @ResponseBody
+    public List<Feed> list() {
+        return feeds.getAll() ;
+    }
+
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String add(@ModelAttribute("feed") final Feed feed) {
+    public void add(@Valid @ModelAttribute final Feed feed) throws IllegalArgumentException, IOException, FeedException {
         feeds.save(feed) ;
+        LOG.info("Added feed: {}", feed) ;
         loadFeed(feed.getUrl()) ;
-        return "redirect:/feeds" ;
     }
 
-    @RequestMapping("/load/{id}")
-    public String load(@PathVariable("id") final Integer id) {
-        Feed feed = feeds.get(id) ;
+    @RequestMapping("/delete/{feed}")
+    public void delete(@ModelAttribute final Feed feed) {
+        feeds.delete(feed) ;
+        LOG.info("Removed feed: {}", feed) ;
+    }
+
+    @RequestMapping("/load/{feed}")
+    public void load(@ModelAttribute final Feed feed) throws IllegalArgumentException, IOException, FeedException {
         loadFeed(feed.getUrl()) ;
-        return "redirect:/feeds" ;
     }
 
-    @RequestMapping("/delete/{id}")
-    public String delete(@PathVariable("id") final Integer id) {
-        Feed feed = feeds.get(id) ;
-        if (feed != null) {
-            feeds.delete(feed) ;
-            LOG.info("Removed feed: " + feed.getUrl()) ;
-        } else
-            LOG.info("No feed with id " + id) ;
-
-        return "redirect:/feeds" ;
-    }
-
-    private void loadFeed(final String url) {
-        try {
-            URL feedSource = new URL(url) ;
+    private void loadFeed(final String url) throws IOException, IllegalArgumentException, FeedException {
+        URL feedSource = new URL(url) ;
+        try (XmlReader reader = new XmlReader(feedSource)) {
             SyndFeedInput input = new SyndFeedInput() ;
-            SyndFeed sf = input.build(new XmlReader(feedSource)) ;
+            SyndFeed sf = input.build(reader) ;
             for (Object o : sf.getEntries())
                 addItem((SyndEntry) o) ;
-        } catch (MalformedURLException e) {
-            e.printStackTrace() ;
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace() ;
-        } catch (FeedException e) {
-            e.printStackTrace() ;
-        } catch (IOException e) {
-            e.printStackTrace() ;
         }
     }
 
     @Transactional
     private void addItem(final SyndEntry entry) {
-        LOG.debug("Processing item " + entry.getTitle()) ;
+        LOG.debug("Processing item {}", entry.getTitle()) ;
         String show_title ;
         int season_number ;
         int episode_number ;
@@ -126,7 +114,7 @@ public class FeedController {
 
         Show show = shows.find(show_title) ;
         if (show == null) {
-            LOG.debug(show_title + " is not on the list - ignoring.") ;
+            LOG.debug("{} is not on the list - ignoring", show_title) ;
             return ;
         }
 
@@ -141,6 +129,6 @@ public class FeedController {
             episode.addTorrent(torrent) ;
 
         episodes.save(episode) ;
-        LOG.info("Added episode: " + episode.toString()) ;
+        LOG.info("Added episode: {}", episode) ;
     }
 }

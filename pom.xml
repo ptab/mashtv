@@ -13,6 +13,7 @@
         <spring.version>3.2.3.RELEASE</spring.version>
         <hibernate.version>4.2.4.Final</hibernate.version>
         <slf4j.version>1.7.5</slf4j.version>
+        <jackson.version>2.2.0</jackson.version>
     </properties>
 
     <build>
@@ -104,6 +105,16 @@
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
             <version>1.1.0.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
 
         <dependency>

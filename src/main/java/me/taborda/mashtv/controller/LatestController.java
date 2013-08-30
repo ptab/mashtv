@@ -8,7 +8,9 @@ import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 import org.springframework.beans.factory.annotation.Autowired ;
 import org.springframework.stereotype.Controller ;
+import org.springframework.web.bind.annotation.PathVariable ;
 import org.springframework.web.bind.annotation.RequestMapping ;
+import org.springframework.web.bind.annotation.ResponseBody ;
 
 import me.taborda.mashtv.model.Episode ;
 import me.taborda.mashtv.model.Show ;
@@ -28,16 +30,17 @@ public class LatestController {
     @Autowired(required = true)
     public EpisodeService episodes ;
 
-    @RequestMapping(value = "")
-    public String list(final Map<String, Object> map) {
-        Map<Long, List<Episode>> latest = new HashMap<>() ;
-        List<Show> ss = shows.findAll() ;
-
-        for (Show s : ss)
-            latest.put(s.getId(), episodes.findLatest(s, 3)) ;
-
-        map.put("shows", ss) ;
-        map.put("latest", latest) ;
+    @RequestMapping("")
+    public String latest() {
         return "latest" ;
+    }
+
+    @RequestMapping("/{count}")
+    @ResponseBody
+    public Map<Show, List<Episode>> list(@PathVariable("count") final int count) {
+        Map<Show, List<Episode>> latest = new HashMap<>() ;
+        for (Show s : shows.findAll())
+            latest.put(s, episodes.findLatest(s, count)) ;
+        return latest ;
     }
 }

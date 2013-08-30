@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service ;
 import org.springframework.transaction.annotation.Transactional ;
 
 import me.taborda.mashtv.dao.EpisodeDAO ;
-
 import me.taborda.mashtv.model.Episode ;
 import me.taborda.mashtv.model.Show ;
 import me.taborda.mashtv.repository.EpisodeRepository ;
@@ -29,8 +28,8 @@ public class EpisodeService {
     }
 
     @Transactional(readOnly = true)
-    public Episode find(final Show show, final int season_number, final int episode_number) {
-        return episodeDAO.get(show, season_number, episode_number) ;
+    public Episode find(final Show show, final int season, final int episode) {
+        return episodeDAO.get(show, season, episode) ;
     }
 
     @Transactional(readOnly = true)

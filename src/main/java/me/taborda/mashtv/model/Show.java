@@ -34,4 +34,9 @@ public class Show extends AbstractEntity implements Comparable<Show> {
     public int compareTo(final Show o) {
         return getTitle().compareTo(o.getTitle()) ;
     }
+
+    @Override
+    public String toString() {
+        return getTitle() ;
+    }
 }
