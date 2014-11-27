@@ -1,7 +1,13 @@
 package me.taborda.mashtv.model ;
 
+import java.util.ArrayList ;
+import java.util.Collections ;
+import java.util.List ;
+
+import javax.persistence.CascadeType ;
 import javax.persistence.Column ;
 import javax.persistence.Entity ;
+import javax.persistence.OneToMany ;
 import javax.validation.constraints.NotNull ;
 import javax.validation.constraints.Size ;
 
@@ -15,19 +21,38 @@ public class Show extends AbstractEntity implements Comparable<Show> {
     @Size(min = 1)
     private String title ;
 
-    public Show() {
+    @OneToMany(cascade = CascadeType.ALL)
+    private final List<Episode> episodes = new ArrayList<>() ;
+
+    protected Show() {
+        // hibernate && JPA
     }
 
     public Show(final String title) {
-        setTitle(title) ;
+        this.title = title ;
     }
 
     public String getTitle() {
         return title ;
     }
 
-    public void setTitle(final String title) {
-        this.title = title ;
+    public List<Episode> getEpisodes() {
+        return Collections.unmodifiableList(episodes) ;
+    }
+
+    public Episode getEpisode(final int season, final int episode) {
+        for (Episode e : episodes) {
+            if (e.getSeason() == season && e.getEpisode() == episode) {
+                return e ;
+            }
+        }
+        return null ;
+    }
+
+    public Episode addEpisode(final int season, final int episode) {
+        Episode e = new Episode(this, season, episode) ;
+        episodes.add(e) ;
+        return e ;
     }
 
     @Override

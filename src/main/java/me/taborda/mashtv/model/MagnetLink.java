@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull ;
 import javax.validation.constraints.Size ;
 
 @Entity
-public class Feed extends AbstractEntity {
+public class MagnetLink extends AbstractEntity implements Comparable<MagnetLink> {
 
     private static final long serialVersionUID = 1L ;
 
@@ -13,16 +13,23 @@ public class Feed extends AbstractEntity {
     @Size(min = 1)
     private String url ;
 
-    protected Feed() {
+    private boolean hd ;
+
+    protected MagnetLink() {
         // hibernate && JPA
     }
 
-    public Feed(final String url) {
+    public MagnetLink(final String url, final boolean hd) {
         this.url = url ;
+        this.hd = hd ;
     }
 
     public String getUrl() {
         return url ;
+    }
+
+    public boolean isHd() {
+        return hd ;
     }
 
     @Override
@@ -35,17 +42,23 @@ public class Feed extends AbstractEntity {
         if (this == obj) {
             return true ;
         }
-        if (!(obj instanceof Feed)) {
+
+        if (!(obj instanceof MagnetLink)) {
             return false ;
         }
-
-        Feed other = (Feed) obj ;
+        MagnetLink other = (MagnetLink) obj ;
         return url.equals(other.getUrl()) ;
     }
 
     @Override
-    public String toString() {
-        return url ;
+    public int compareTo(final MagnetLink o) {
+        if (isHd() && !o.isHd()) {
+            return 1 ;
+        }
+        if (!isHd() && o.isHd()) {
+            return -1 ;
+        }
+        return url.compareTo(o.getUrl()) ;
     }
 
 }

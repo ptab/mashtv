@@ -5,6 +5,7 @@ import java.io.IOException ;
 import java.io.InputStreamReader ;
 import java.net.MalformedURLException ;
 import java.net.URL ;
+import java.util.Collections ;
 import java.util.HashSet ;
 import java.util.Set ;
 import java.util.regex.Matcher ;
@@ -12,7 +13,6 @@ import java.util.regex.Pattern ;
 
 import javax.persistence.CascadeType ;
 import javax.persistence.Entity ;
-import javax.persistence.FetchType ;
 import javax.persistence.ManyToOne ;
 import javax.persistence.OneToMany ;
 import javax.validation.constraints.Min ;
@@ -22,8 +22,9 @@ import javax.validation.constraints.Size ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
-import me.taborda.mashtv.util.Util ;
+import com.fasterxml.jackson.annotation.JsonIgnore ;
 
+import me.taborda.mashtv.util.Util ;
 
 @Entity
 public class Episode extends AbstractEntity implements Comparable<Episode> {
@@ -32,6 +33,9 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
 
     private static final Logger LOG = LoggerFactory.getLogger(Episode.class) ;
 
+    private static final String UNKNOWN_TITLE = "Unknown title" ;
+
+    @JsonIgnore
     @ManyToOne(optional = false)
     private Show show ;
 
@@ -45,22 +49,19 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
     @Size(min = 1)
     private String title ;
 
-    private boolean downloaded ;
+    private boolean downloaded = false ;
 
-    @OneToMany(mappedBy = "episode", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<Torrent> torrents ;
+    @OneToMany(cascade = CascadeType.ALL)
+    private final Set<MagnetLink> magnetLinks = new HashSet<>() ;
 
-    public Episode() {
-        setDownloaded(false) ;
-        torrents = new HashSet<>() ;
+    protected Episode() {
+        // hibernate && JPA
     }
 
     public Episode(final Show show, final int season, final int episode) {
-        setShow(show) ;
-        setSeason(season) ;
-        setEpisode(episode) ;
-        setDownloaded(false) ;
-        torrents = new HashSet<>() ;
+        this.show = show ;
+        this.season = season ;
+        this.episode = episode ;
         fetchTitle() ;
     }
 
@@ -69,11 +70,11 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
 
         URL url = null ;
         try {
-            url = new URL("http://services.tvrage.com/tools/quickinfo.php?show="
-                            + Util.fixString(getShow().getTitle()).replaceFirst("The ", "").replace(" ", "") + "&ep=" + getSeason() + "x" + episode) ;
+            url = new URL("http://services.tvrage.com/tools/quickinfo.php?show=" + Util.fixString(getShow().getTitle()).replaceFirst("The ", "").replace(" ", "") + "&ep=" + getSeason() + "x"
+                            + episode) ;
         } catch (MalformedURLException e) {
             LOG.error("Could not build URL", e) ;
-            title = "Unknown title" ;
+            title = UNKNOWN_TITLE ;
             return ;
         }
 
@@ -81,27 +82,23 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
             LOG.debug("url: " + url.toString()) ;
             String line ;
 
-            while ((line = in.readLine()) != null)
+            while ((line = in.readLine()) != null) {
                 builder.append(line) ;
+            }
 
             in.close() ;
         } catch (IOException e) {
             LOG.error("Could not read from stream", e) ;
-            title = "Unknown title" ;
+            title = UNKNOWN_TITLE ;
         }
 
-        String contents = builder.toString() ;
         Pattern pattern = Pattern.compile("Episode Info@" + Util.decimal(getSeason()) + "x" + Util.decimal(episode) + "\\^([^\\^]*)\\^") ;
-        Matcher matcher = pattern.matcher(contents) ;
-        if (matcher.find())
+        Matcher matcher = pattern.matcher(builder.toString()) ;
+        if (matcher.find()) {
             title = matcher.group(1) ;
-        else
-            title = "Unknown title" ;
-    }
-
-    public String getSubtitle() {
-        return "http://www.podnapisi.net/ppodnapisi/search?tbsl=3&asdp=0&sK=" + getShow().getTitle().replace(" ", "+")
-                        + "&sJ=2&sT=1&sY=&sAKA2=1&sR=&sTS=" + getSeason() + "&sTE=" + getEpisode() ;
+        } else {
+            title = UNKNOWN_TITLE ;
+        }
     }
 
     /*
@@ -112,24 +109,12 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
         return episode ;
     }
 
-    public void setEpisode(final int episode) {
-        this.episode = episode ;
-    }
-
     public Show getShow() {
         return show ;
     }
 
-    public void setShow(final Show show) {
-        this.show = show ;
-    }
-
     public int getSeason() {
         return season ;
-    }
-
-    public void setSeason(final int season) {
-        this.season = season ;
     }
 
     public String getTitle() {
@@ -140,22 +125,20 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
         this.title = title ;
     }
 
-    public Set<Torrent> getTorrents() {
-        return torrents ;
+    public Set<MagnetLink> getMagnetLinks() {
+        return Collections.unmodifiableSet(magnetLinks) ;
     }
 
-    public void setTorrents(final Set<Torrent> torrents) {
-        this.torrents = torrents ;
+    public void addMagnetLink(final String url, final boolean isHd) {
+        magnetLinks.add(new MagnetLink(url, isHd)) ;
     }
 
-    public void addTorrent(final Torrent torrent) {
-        torrents.add(torrent) ;
-    }
-
-    public Torrent getTorrent(final int id) {
-        for (Torrent t : getTorrents())
-            if (t.getId() == id)
+    public MagnetLink getMagnetLink(final int id) {
+        for (MagnetLink t : getMagnetLinks()) {
+            if (t.getId() == id) {
                 return t ;
+            }
+        }
         LOG.error("No torrent with id " + id + " for episode " + getId()) ;
         return null ;
     }
@@ -166,6 +149,11 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
 
     public void setDownloaded(final boolean downloaded) {
         this.downloaded = downloaded ;
+    }
+
+    @JsonIgnore
+    public boolean isTitleUnknown() {
+        return UNKNOWN_TITLE.equals(title) ;
     }
 
     @Override
@@ -181,13 +169,15 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
     public int compareTo(final Episode o) {
         int ret ;
 
-        if (getShow().getTitle().equalsIgnoreCase(o.getShow().getTitle()))
-            if (getSeason() == o.getSeason())
+        if (getShow().getTitle().equalsIgnoreCase(o.getShow().getTitle())) {
+            if (getSeason() == o.getSeason()) {
                 ret = new Integer(getEpisode()).compareTo(new Integer(o.getEpisode())) ;
-            else
+            } else {
                 ret = new Integer(getSeason()).compareTo(new Integer(o.getSeason())) ;
-        else
+            }
+        } else {
             ret = getShow().getTitle().compareToIgnoreCase(o.getShow().getTitle()) ;
+        }
 
         return ret * -1 ;
     }

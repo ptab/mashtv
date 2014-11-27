@@ -6,4 +6,5 @@ import me.taborda.mashtv.model.Show ;
 
 public interface ShowRepository extends JpaRepository<Show, Long> {
 
+    Show findByTitle(String title) ;
 }
