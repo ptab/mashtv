@@ -36,6 +36,7 @@ public class FeedController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @ResponseBody
     public void add(@NotNull @RequestParam final String url) throws IllegalArgumentException, IOException, FeedException {
         Feed feed = new Feed(url) ;
         feeds.save(feed) ;
@@ -44,6 +45,7 @@ public class FeedController {
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
+    @ResponseBody
     public void delete(@PathVariable final long id) {
         Feed f = feeds.get(id) ;
         feeds.delete(f) ;
@@ -51,6 +53,7 @@ public class FeedController {
     }
 
     @RequestMapping(value = "/load/{id}", method = RequestMethod.DELETE)
+    @ResponseBody
     public void load(@PathVariable final long id) throws IllegalArgumentException, IOException, FeedException {
         Feed f = feeds.get(id) ;
         feeds.load(f) ;
