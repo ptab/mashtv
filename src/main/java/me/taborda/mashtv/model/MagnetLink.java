@@ -13,19 +13,28 @@ public class MagnetLink extends AbstractEntity implements Comparable<MagnetLink>
     @Size(min = 1)
     private String url ;
 
+    @NotNull
+    @Size(min = 1)
+    private String filename ;
+
     private boolean hd ;
 
     protected MagnetLink() {
         // hibernate && JPA
     }
 
-    public MagnetLink(final String url, final boolean hd) {
+    public MagnetLink(final String url, final String filename, final boolean hd) {
         this.url = url ;
+        this.filename = filename ;
         this.hd = hd ;
     }
 
     public String getUrl() {
         return url ;
+    }
+
+    public String getFilename() {
+        return filename ;
     }
 
     public boolean isHd() {

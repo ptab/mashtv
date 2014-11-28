@@ -1,15 +1,8 @@
 package me.taborda.mashtv.model ;
 
-import java.io.BufferedReader ;
-import java.io.IOException ;
-import java.io.InputStreamReader ;
-import java.net.MalformedURLException ;
-import java.net.URL ;
 import java.util.Collections ;
 import java.util.HashSet ;
 import java.util.Set ;
-import java.util.regex.Matcher ;
-import java.util.regex.Pattern ;
 
 import javax.persistence.CascadeType ;
 import javax.persistence.Entity ;
@@ -23,8 +16,6 @@ import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
 import com.fasterxml.jackson.annotation.JsonIgnore ;
-
-import me.taborda.mashtv.util.Util ;
 
 @Entity
 public class Episode extends AbstractEntity implements Comparable<Episode> {
@@ -59,46 +50,14 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
     }
 
     public Episode(final Show show, final int season, final int episode) {
+        this(show, season, episode, UNKNOWN_TITLE) ;
+    }
+
+    public Episode(final Show show, final int season, final int episode, final String title) {
         this.show = show ;
         this.season = season ;
         this.episode = episode ;
-        fetchTitle() ;
-    }
-
-    public void fetchTitle() {
-        StringBuilder builder = new StringBuilder() ;
-
-        URL url = null ;
-        try {
-            url = new URL("http://services.tvrage.com/tools/quickinfo.php?show=" + Util.fixString(getShow().getTitle()).replaceFirst("The ", "").replace(" ", "") + "&ep=" + getSeason() + "x"
-                            + episode) ;
-        } catch (MalformedURLException e) {
-            LOG.error("Could not build URL", e) ;
-            title = UNKNOWN_TITLE ;
-            return ;
-        }
-
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()))) {
-            LOG.debug("url: " + url.toString()) ;
-            String line ;
-
-            while ((line = in.readLine()) != null) {
-                builder.append(line) ;
-            }
-
-            in.close() ;
-        } catch (IOException e) {
-            LOG.error("Could not read from stream", e) ;
-            title = UNKNOWN_TITLE ;
-        }
-
-        Pattern pattern = Pattern.compile("Episode Info@" + Util.decimal(getSeason()) + "x" + Util.decimal(episode) + "\\^([^\\^]*)\\^") ;
-        Matcher matcher = pattern.matcher(builder.toString()) ;
-        if (matcher.find()) {
-            title = matcher.group(1) ;
-        } else {
-            title = UNKNOWN_TITLE ;
-        }
+        this.title = title ;
     }
 
     /*
@@ -129,8 +88,8 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
         return Collections.unmodifiableSet(magnetLinks) ;
     }
 
-    public void addMagnetLink(final String url, final boolean isHd) {
-        magnetLinks.add(new MagnetLink(url, isHd)) ;
+    public void addMagnetLink(final String url, final String filename, final boolean isHd) {
+        magnetLinks.add(new MagnetLink(url, filename, isHd)) ;
     }
 
     public MagnetLink getMagnetLink(final int id) {
