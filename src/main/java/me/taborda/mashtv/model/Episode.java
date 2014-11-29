@@ -17,6 +17,8 @@ import org.slf4j.LoggerFactory ;
 
 import com.fasterxml.jackson.annotation.JsonIgnore ;
 
+import me.taborda.mashtv.util.Util ;
+
 @Entity
 public class Episode extends AbstractEntity implements Comparable<Episode> {
 
@@ -57,7 +59,7 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
         this.show = show ;
         this.season = season ;
         this.episode = episode ;
-        this.title = title ;
+        this.title = Util.fixTitle(title) ;
     }
 
     /*
@@ -81,7 +83,7 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
     }
 
     public void setTitle(final String title) {
-        this.title = title ;
+        this.title = Util.fixTitle(title) ;
     }
 
     public Set<MagnetLink> getMagnetLinks() {

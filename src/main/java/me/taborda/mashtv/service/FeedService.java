@@ -79,13 +79,14 @@ public class FeedService {
     }
 
     private void loadEntry(final SyndEntry entry) {
+        LOG.trace("Matching {}", entry.getTitle()) ;
         Matcher matcher = TITLE_PATTERN.matcher(entry.getTitle()) ;
         if (!matcher.matches()) {
             LOG.debug("No match: {}", entry.getTitle()) ;
             return ;
         }
 
-        String showTitle = Util.fixString(matcher.group(1)) ;
+        String showTitle = Util.fixTitle(matcher.group(1)) ;
         int seasonNumber = Integer.parseInt(matcher.group(2)) ;
         int episodeNumber = Integer.parseInt(matcher.group(3)) ;
         boolean hd = HD_PATTERN.matcher(entry.getTitle()).matches() ;
