@@ -14,12 +14,11 @@ import javax.validation.constraints.NotNull ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 import org.springframework.beans.factory.annotation.Autowired ;
-import org.springframework.stereotype.Controller ;
 import org.springframework.web.bind.annotation.ModelAttribute ;
 import org.springframework.web.bind.annotation.PathVariable ;
 import org.springframework.web.bind.annotation.RequestMapping ;
 import org.springframework.web.bind.annotation.RequestMethod ;
-import org.springframework.web.bind.annotation.ResponseBody ;
+import org.springframework.web.bind.annotation.RestController ;
 
 import me.taborda.mashtv.model.Episode ;
 import me.taborda.mashtv.model.MagnetLink ;
@@ -27,11 +26,11 @@ import me.taborda.mashtv.model.Show ;
 import me.taborda.mashtv.service.EpisodeService ;
 import me.taborda.mashtv.service.ShowService ;
 
-@Controller
-@RequestMapping("/shows")
-public class ShowController extends BaseController {
+@RestController
+@RequestMapping("/api/shows")
+public class RestShowController extends RestBaseController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ShowController.class) ;
+    private static final Logger LOG = LoggerFactory.getLogger(RestShowController.class) ;
 
     @Autowired
     private ShowService shows ;
@@ -40,13 +39,11 @@ public class ShowController extends BaseController {
     private EpisodeService episodes ;
 
     @RequestMapping("")
-    @ResponseBody
     public List<Show> list() {
         return shows.findAll() ;
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    @ResponseBody
     public void add(@NotNull final String title) {
         Show show = new Show(title) ;
         shows.save(show) ;
@@ -54,7 +51,6 @@ public class ShowController extends BaseController {
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
-    @ResponseBody
     public void delete(@PathVariable final long id) {
         Show show = shows.find(id) ;
         shows.delete(show) ;
@@ -62,27 +58,23 @@ public class ShowController extends BaseController {
     }
 
     @RequestMapping("/{id}")
-    @ResponseBody
     public Show getShow(@PathVariable final long id) {
         return shows.find(id) ;
     }
 
     @RequestMapping("/{id}/episodes")
-    @ResponseBody
     public List<Episode> listEpisodes(@PathVariable final long id) {
         Show show = shows.find(id) ;
         return show.getEpisodes() ;
     }
 
     @RequestMapping("/{id}/episodes/{season}/{episode}")
-    @ResponseBody
     public Episode getEpisode(@PathVariable final long id, @PathVariable final Integer season, @PathVariable final Integer episode) {
         Show show = shows.find(id) ;
         return findEpisode(show, season, episode) ;
     }
 
     @RequestMapping(value = "/{id}/toggle/{season}/{episode}", method = RequestMethod.POST)
-    @ResponseBody
     public void toggleWatched(@PathVariable final long id, @PathVariable final Integer season, @PathVariable final Integer episode) {
         Show show = shows.find(id) ;
 
@@ -93,7 +85,6 @@ public class ShowController extends BaseController {
     }
 
     @RequestMapping("/{id}/download/{season}/{episode}/{torrent}")
-    @ResponseBody
     public void download(@PathVariable final long id, @PathVariable final Integer season, @PathVariable final Integer episode, @PathVariable final Integer torrent) throws FileNotFoundException,
     IOException {
         Show show = shows.find(id) ;
@@ -111,14 +102,12 @@ public class ShowController extends BaseController {
     }
 
     @RequestMapping("/{id}/torrents/{season}/{episode}")
-    @ResponseBody
     public Set<MagnetLink> torrents(@ModelAttribute final Show show, @PathVariable final Integer season, @PathVariable final Integer episode) {
         Episode e = findEpisode(show, season, episode) ;
         return e.getMagnetLinks() ;
     }
 
     @RequestMapping(value = "/{id}/delete/{season}/{episode}", method = RequestMethod.DELETE)
-    @ResponseBody
     public void delete(@ModelAttribute final Show show, @PathVariable final Integer season, @PathVariable final Integer episode) {
         Episode e = findEpisode(show, season, episode) ;
         episodes.delete(e) ;

@@ -11,6 +11,8 @@ import javax.persistence.OneToMany ;
 import javax.validation.constraints.NotNull ;
 import javax.validation.constraints.Size ;
 
+import me.taborda.mashtv.util.Util ;
+
 @Entity
 public class Show extends AbstractEntity implements Comparable<Show> {
 
@@ -29,7 +31,7 @@ public class Show extends AbstractEntity implements Comparable<Show> {
     }
 
     public Show(final String title) {
-        this.title = title ;
+        this.title = Util.fixTitle(title) ;
     }
 
     public String getTitle() {

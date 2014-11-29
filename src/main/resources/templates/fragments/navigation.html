@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+    <header class="container" th:fragment="navigation (selected)">
+        <nav class="navbar navbar-default">
+            <div class="navbar-header">
+                <span class="navbar-brand">MashTV</span>
+            </div>
+            <ul class="nav navbar-nav">
+                <li th:classappend="${selected} == 'feeds' ? 'active'"><a th:href="@{/feeds}">Feeds</a></li>
+                <li th:classappend="${selected} == 'shows' ? 'active'"><a th:href="@{/shows}">Shows</a></li>
+            </ul>
+        </nav>
+    </header>
+</body>
+</html>
