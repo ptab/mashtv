@@ -1,4 +1,4 @@
-package me.taborda.mashtv.util ;
+package me.taborda.mashtv ;
 
 import org.apache.commons.lang3.text.WordUtils ;
 

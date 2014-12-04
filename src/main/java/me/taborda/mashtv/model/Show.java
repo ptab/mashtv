@@ -11,7 +11,7 @@ import javax.persistence.OneToMany ;
 import javax.validation.constraints.NotNull ;
 import javax.validation.constraints.Size ;
 
-import me.taborda.mashtv.util.Util ;
+import org.apache.commons.lang3.text.WordUtils ;
 
 @Entity
 public class Show extends AbstractEntity implements Comparable<Show> {
@@ -31,7 +31,7 @@ public class Show extends AbstractEntity implements Comparable<Show> {
     }
 
     public Show(final String title) {
-        this.title = Util.fixTitle(title) ;
+        this.title = WordUtils.capitalizeFully(title).trim() ;
     }
 
     public String getTitle() {

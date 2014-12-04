@@ -7,6 +7,8 @@ import javax.annotation.Resource ;
 import org.springframework.stereotype.Service ;
 import org.springframework.transaction.annotation.Transactional ;
 
+import me.taborda.mashtv.NonUniqueException ;
+
 import me.taborda.mashtv.model.Show ;
 import me.taborda.mashtv.repository.ShowRepository ;
 
@@ -23,7 +25,7 @@ public class ShowService {
 
     @Transactional(readOnly = true)
     public Show find(final String title) {
-        return repository.findByTitle(title) ;
+        return repository.findByTitleIgnoreCase(title) ;
     }
 
     @Transactional(readOnly = true)
@@ -32,8 +34,13 @@ public class ShowService {
     }
 
     @Transactional
-    public Show save(final Show show) {
-        return repository.save(show) ;
+    public Show add(final String title) {
+        Show existing = find(title) ;
+        if (existing != null) {
+            throw new NonUniqueException(existing.getTitle()) ;
+        }
+
+        return repository.save(new Show(title)) ;
     }
 
     @Transactional

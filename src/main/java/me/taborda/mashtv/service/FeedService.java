@@ -1,6 +1,7 @@
 package me.taborda.mashtv.service ;
 
 import java.io.IOException ;
+import java.net.MalformedURLException ;
 import java.net.URL ;
 import java.util.List ;
 import java.util.regex.Matcher ;
@@ -18,11 +19,13 @@ import com.rometools.rome.io.FeedException ;
 import com.rometools.rome.io.SyndFeedInput ;
 import com.rometools.rome.io.XmlReader ;
 
+import me.taborda.mashtv.NonUniqueException ;
+import me.taborda.mashtv.Util ;
+
 import me.taborda.mashtv.model.Episode ;
 import me.taborda.mashtv.model.Feed ;
 import me.taborda.mashtv.model.Show ;
 import me.taborda.mashtv.repository.FeedRepository ;
-import me.taborda.mashtv.util.Util ;
 
 @Service
 public class FeedService {
@@ -57,8 +60,13 @@ public class FeedService {
     }
 
     @Transactional
-    public void save(final Feed feed) {
-        repository.save(feed) ;
+    public Feed add(final String url) {
+        Feed existing = repository.findByUrlIgnoreCase(url) ;
+        if (existing != null) {
+            throw new NonUniqueException(existing.getUrl()) ;
+        }
+
+        return repository.save(new Feed(url)) ;
     }
 
     @Transactional
@@ -67,14 +75,24 @@ public class FeedService {
     }
 
     @Transactional
-    public void load(final Feed feed) throws IOException, IllegalArgumentException, FeedException {
-        URL feedSource = new URL(feed.getUrl()) ;
+    public void load(final Feed feed) {
+        URL feedSource ;
+        try {
+            feedSource = new URL(feed.getUrl()) ;
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Invalid feed URL: " + feed.getUrl()) ;
+        }
+
         try (XmlReader reader = new XmlReader(feedSource)) {
             SyndFeedInput input = new SyndFeedInput() ;
             SyndFeed sf = input.build(reader) ;
             for (Object o : sf.getEntries()) {
                 loadEntry((SyndEntry) o) ;
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e) ;
+        } catch (FeedException e) {
+            throw new RuntimeException(e) ;
         }
     }
 

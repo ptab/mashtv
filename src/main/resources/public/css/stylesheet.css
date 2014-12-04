@@ -1,0 +1,9 @@
+@CHARSET "UTF-8";
+
+div.container > table {
+    margin-top: 20px;
+}
+
+footer {
+    margin-top: 50px;
+}

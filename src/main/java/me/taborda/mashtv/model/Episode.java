@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory ;
 
 import com.fasterxml.jackson.annotation.JsonIgnore ;
 
-import me.taborda.mashtv.util.Util ;
+import me.taborda.mashtv.Util ;
 
 @Entity
 public class Episode extends AbstractEntity implements Comparable<Episode> {
@@ -41,8 +41,6 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
     @NotNull
     @Size(min = 1)
     private String title ;
-
-    private boolean downloaded = false ;
 
     @OneToMany(cascade = CascadeType.ALL)
     private final Set<MagnetLink> magnetLinks = new HashSet<>() ;
@@ -104,14 +102,6 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
         return null ;
     }
 
-    public boolean isDownloaded() {
-        return downloaded ;
-    }
-
-    public void setDownloaded(final boolean downloaded) {
-        this.downloaded = downloaded ;
-    }
-
     @JsonIgnore
     public boolean isTitleUnknown() {
         return UNKNOWN_TITLE.equals(title) ;
@@ -130,14 +120,14 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
     public int compareTo(final Episode o) {
         int ret ;
 
-        if (getShow().getTitle().equalsIgnoreCase(o.getShow().getTitle())) {
+        if (getShow().equals(o.getShow())) {
             if (getSeason() == o.getSeason()) {
                 ret = new Integer(getEpisode()).compareTo(new Integer(o.getEpisode())) ;
             } else {
                 ret = new Integer(getSeason()).compareTo(new Integer(o.getSeason())) ;
             }
         } else {
-            ret = getShow().getTitle().compareToIgnoreCase(o.getShow().getTitle()) ;
+            ret = getShow().compareTo(o.getShow()) ;
         }
 
         return ret * -1 ;

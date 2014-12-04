@@ -7,7 +7,7 @@
         </encoder>
     </appender>
 
-    <logger name="me.taborda.mashtv" level="trace" />
+    <logger name="me.taborda.mashtv" level="debug" />
 
     <root level="warn">
         <appender-ref ref="console" />

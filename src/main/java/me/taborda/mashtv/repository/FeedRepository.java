@@ -6,4 +6,5 @@ import me.taborda.mashtv.model.Feed ;
 
 public interface FeedRepository extends JpaRepository<Feed, Long> {
 
+    Feed findByUrlIgnoreCase(String url) ;
 }

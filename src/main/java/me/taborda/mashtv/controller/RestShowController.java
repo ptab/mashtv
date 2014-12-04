@@ -1,11 +1,5 @@
 package me.taborda.mashtv.controller ;
 
-import java.io.FileNotFoundException ;
-import java.io.FileOutputStream ;
-import java.io.IOException ;
-import java.net.URL ;
-import java.nio.channels.Channels ;
-import java.nio.channels.ReadableByteChannel ;
 import java.util.List ;
 import java.util.Set ;
 
@@ -45,21 +39,20 @@ public class RestShowController extends RestBaseController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public void add(@NotNull final String title) {
-        Show show = new Show(title) ;
-        shows.save(show) ;
+        Show show = shows.add(title) ;
         LOG.info("Added TV Show: " + show.getTitle()) ;
-    }
-
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable final long id) {
-        Show show = shows.find(id) ;
-        shows.delete(show) ;
-        LOG.info("Removed TV Show: {}", show) ;
     }
 
     @RequestMapping("/{id}")
     public Show getShow(@PathVariable final long id) {
         return shows.find(id) ;
+    }
+
+    @RequestMapping(value = "/{id}/delete", method = RequestMethod.DELETE)
+    public void delete(@PathVariable final long id) {
+        Show show = shows.find(id) ;
+        shows.delete(show) ;
+        LOG.info("Removed TV Show: {}", show) ;
     }
 
     @RequestMapping("/{id}/episodes")
@@ -74,40 +67,13 @@ public class RestShowController extends RestBaseController {
         return findEpisode(show, season, episode) ;
     }
 
-    @RequestMapping(value = "/{id}/toggle/{season}/{episode}", method = RequestMethod.POST)
-    public void toggleWatched(@PathVariable final long id, @PathVariable final Integer season, @PathVariable final Integer episode) {
-        Show show = shows.find(id) ;
-
-        Episode e = findEpisode(show, season, episode) ;
-        e.setDownloaded(!e.isDownloaded()) ;
-        episodes.save(e) ;
-        LOG.info("{} was set as {}", episode, e.isDownloaded() ? "downloaded" : "not downloaded") ;
-    }
-
-    @RequestMapping("/{id}/download/{season}/{episode}/{torrent}")
-    public void download(@PathVariable final long id, @PathVariable final Integer season, @PathVariable final Integer episode, @PathVariable final Integer torrent) throws FileNotFoundException,
-    IOException {
-        Show show = shows.find(id) ;
-        Episode e = findEpisode(show, season, episode) ;
-        MagnetLink t = e.getMagnetLink(torrent) ;
-
-        URL tor = new URL(t.getUrl()) ;
-        try (FileOutputStream fos = new FileOutputStream("/home/tab/testes/" + e.toShortString() + ".torrent"); ReadableByteChannel rbc = Channels.newChannel(tor.openStream())) {
-            fos.getChannel().transferFrom(rbc, 0, 1 << 24) ;
-        }
-
-        e.setDownloaded(true) ;
-        episodes.save(e) ;
-        LOG.info("{} downloaded!", e) ;
-    }
-
-    @RequestMapping("/{id}/torrents/{season}/{episode}")
+    @RequestMapping("/{id}/episodes/{season}/{episode}/torrents")
     public Set<MagnetLink> torrents(@ModelAttribute final Show show, @PathVariable final Integer season, @PathVariable final Integer episode) {
         Episode e = findEpisode(show, season, episode) ;
         return e.getMagnetLinks() ;
     }
 
-    @RequestMapping(value = "/{id}/delete/{season}/{episode}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}/episodes/{season}/{episode}/delete", method = RequestMethod.DELETE)
     public void delete(@ModelAttribute final Show show, @PathVariable final Integer season, @PathVariable final Integer episode) {
         Episode e = findEpisode(show, season, episode) ;
         episodes.delete(e) ;
