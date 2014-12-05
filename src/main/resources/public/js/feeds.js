@@ -1,8 +1,10 @@
-var url = "api/feeds" ;
+var url = "api/feeds";
 
 $(document).ready(function() {
     loadTable(url, displayItem);
-    overrideFormSubmits(function() { loadTable("api/feeds", displayItem); });
+    overrideFormSubmits(function(highlightItemId) {
+        loadTable("api/feeds", displayItem, highlightItemId);
+    });
 });
 
 displayItem = function(item) {

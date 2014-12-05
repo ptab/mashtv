@@ -1,4 +1,4 @@
-loadTable = function(url, displayItem) {
+loadTable = function(url, displayItem, highlight) {
     $.getJSON(url, function(data) {
         var items = [];
         $.each(data, function() {
@@ -19,7 +19,12 @@ loadTable = function(url, displayItem) {
                 });
             });
 
-            items.push($("<tr/>").append($("<td/>").append(display)).append($("<td/>").append(removeButton)));
+            var tr = $("<tr/>");
+            if (this.id === highlight) {
+                flashElement(tr, "success");
+            }
+
+            items.push(tr.append($("<td/>").append(display)).append($("<td/>").append(removeButton)));
         });
 
         items = items.sort(function(a, b) {
@@ -27,8 +32,9 @@ loadTable = function(url, displayItem) {
             return a.children("td:first")[0].outerText.localeCompare(b.children("td:first")[0].outerText);
         });
 
-        $("table").children().remove();
-        $("table").append(items);
+        var table = $("table");
+        table.children().remove();
+        table.append(items);
     });
 };
 
@@ -42,18 +48,23 @@ overrideFormSubmits = function(success) {
             data : frm.serialize()
         });
 
-        request.done(function(msg) {
+        request.done(function(data) {
             frm[0].reset();
-            markForm($("div.form-group"), "has-success", "glyphicon-ok");
-            success();
+            success(data.id);
         });
 
-        request.fail(function(jqXHR, textStatus) {
+        request.fail(function(jqXHR) {
             markForm($("div.form-group"), "has-error", "glyphicon-remove");
             showError(jqXHR.responseJSON.message);
         });
 
         ev.preventDefault();
+    });
+}
+
+flashElement = function(element, classname) {
+    element.addClass(classname).delay(3000).queue(function() {
+        $(this).removeClass(classname).dequeue();
     });
 }
 

@@ -38,9 +38,10 @@ public class RestShowController extends RestBaseController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public void add(@NotNull final String title) {
+    public Show add(@NotNull final String title) {
         Show show = shows.add(title) ;
         LOG.info("Added TV Show: " + show.getTitle()) ;
+        return show ;
     }
 
     @RequestMapping("/{id}")

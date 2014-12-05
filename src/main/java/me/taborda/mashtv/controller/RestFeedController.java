@@ -31,10 +31,11 @@ public class RestFeedController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public void add(@NotNull @RequestParam final String url) {
+    public Feed add(@NotNull @RequestParam final String url) {
         Feed feed = feeds.add(url.trim()) ;
         LOG.info("Added feed: {}", feed) ;
         feeds.load(feed) ;
+        return feed ;
     }
 
     @RequestMapping(value = "/{id}/delete", method = RequestMethod.DELETE)
