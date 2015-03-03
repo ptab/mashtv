@@ -58,6 +58,23 @@ public class Show extends AbstractEntity implements Comparable<Show> {
     }
 
     @Override
+    public int hashCode() {
+        return title.hashCode() ;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true ;
+        }
+        if (!(obj instanceof Show)) {
+            return false ;
+        }
+        Show other = (Show) obj ;
+        return title.equals(other.title) ;
+    }
+
+    @Override
     public int compareTo(final Show o) {
         return getTitle().compareTo(o.getTitle()) ;
     }

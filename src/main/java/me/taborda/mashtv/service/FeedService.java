@@ -21,7 +21,6 @@ import com.rometools.rome.io.XmlReader ;
 
 import me.taborda.mashtv.NonUniqueException ;
 import me.taborda.mashtv.Util ;
-
 import me.taborda.mashtv.model.Episode ;
 import me.taborda.mashtv.model.Feed ;
 import me.taborda.mashtv.model.Show ;
