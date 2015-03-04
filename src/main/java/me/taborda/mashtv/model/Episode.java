@@ -12,6 +12,9 @@ import javax.validation.constraints.Min ;
 import javax.validation.constraints.NotNull ;
 import javax.validation.constraints.Size ;
 
+import org.apache.commons.lang3.builder.CompareToBuilder ;
+import org.apache.commons.lang3.builder.EqualsBuilder ;
+import org.apache.commons.lang3.builder.HashCodeBuilder ;
 import org.slf4j.Logger ;
 import org.slf4j.LoggerFactory ;
 
@@ -109,27 +112,34 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
 
     @Override
     public String toString() {
-        return getShow().getTitle() + ": Season " + getSeason() + ", Episode " + episode + " - " + title ;
+        return String.format("%s: Season %d, Episode %d - %s", show.getTitle(), season, episode, title) ;
     }
 
     public String toShortString() {
-        return getShow().getTitle().replace(" ", ".") + ".S" + getSeason() + "E" + getEpisode() ;
+        return String.format("%s.S%dE%d", show.getTitle().replace(" ", "."), season, episode) ;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(show).append(season).append(episode).toHashCode() ;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true ;
+        }
+        if (!(obj instanceof Episode)) {
+            return false ;
+        }
+
+        Episode other = (Episode) obj ;
+        return new EqualsBuilder().append(show, other.getShow()).append(season, other.getSeason()).append(episode, other.getEpisode()).build() ;
     }
 
     @Override
     public int compareTo(final Episode o) {
-        int ret ;
-
-        if (getShow().equals(o.getShow())) {
-            if (getSeason() == o.getSeason()) {
-                ret = new Integer(getEpisode()).compareTo(new Integer(o.getEpisode())) ;
-            } else {
-                ret = new Integer(getSeason()).compareTo(new Integer(o.getSeason())) ;
-            }
-        } else {
-            ret = getShow().compareTo(o.getShow()) ;
-        }
-
-        return ret * -1 ;
+        return -1 * new CompareToBuilder().append(show, o.getShow()).append(season, o.getSeason()).append(episode, o.getEpisode()).build() ;
     }
+
 }
