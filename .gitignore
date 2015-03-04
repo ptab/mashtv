@@ -1,7 +1,15 @@
+# default
 bin
 build
+target
+*.log
+*.db
+
+# eclipse
 .settings
 .classpath
 .project
-target
-*.db
+
+# intellij
+.idea
+*.iml
