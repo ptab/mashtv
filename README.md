@@ -10,5 +10,5 @@
 * episodes with . in the name are screwed . matches the link, but doesn't find it on DB
 
 #### Code quality
-* unit testing
-* more integration tests
+* add coverage ?
+* parameterize feed unit tests

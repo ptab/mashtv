@@ -12,4 +12,6 @@ public interface EpisodeRepository extends JpaRepository<Episode, Long> {
 
     List<Episode> findFirst5ByShow(Show show, Sort sort) ;
 
+    List<Episode> findByShow(Show show, Sort sort) ;
+
 }

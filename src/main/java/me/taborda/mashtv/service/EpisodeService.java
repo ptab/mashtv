@@ -73,11 +73,8 @@ public class EpisodeService {
                     break ;
                 }
             }
-
-            in.close() ;
         } catch (IOException e) {
             LOG.error("Could not read from stream", e) ;
         }
-
     }
 }
