@@ -13,7 +13,6 @@ import org.springframework.data.domain.Sort ;
 import org.springframework.data.domain.Sort.Direction ;
 
 import me.taborda.mashtv.AbstractIntegrationTest ;
-
 import me.taborda.mashtv.NonUniqueException ;
 import me.taborda.mashtv.model.Episode ;
 import me.taborda.mashtv.model.Feed ;
@@ -47,6 +46,8 @@ public class FeedServiceTest extends AbstractIntegrationTest {
     @After
     public void cleanup() {
         repository.deleteAll() ;
+        shows.deleteAll() ;
+        episodes.deleteAll() ;
     }
 
     @Test
