@@ -6,7 +6,7 @@ import org.springframework.context.annotation.ComponentScan ;
 import org.springframework.context.annotation.Configuration ;
 
 @SpringApplicationConfiguration
-public class AbstractIntegrationTest extends AbstractTest {
+public abstract class AbstractIntegrationTest extends AbstractTest {
 
     @ComponentScan
     @Configuration

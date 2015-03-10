@@ -13,3 +13,7 @@ target
 # intellij
 .idea
 *.iml
+
+# gradle
+gradle
+.gradle
