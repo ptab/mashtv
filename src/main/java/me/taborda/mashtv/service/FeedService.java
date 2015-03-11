@@ -79,7 +79,8 @@ public class FeedService {
         try {
             feedSource = new URL(feed.getUrl()) ;
         } catch (MalformedURLException e) {
-            throw new RuntimeException("Invalid feed URL: " + feed.getUrl()) ;
+            LOG.error("Can't build URL: {}", e.getMessage()) ;
+            return ;
         }
 
         try (XmlReader reader = new XmlReader(feedSource)) {
@@ -89,9 +90,11 @@ public class FeedService {
                 loadEntry((SyndEntry) o) ;
             }
         } catch (IOException e) {
-            throw new RuntimeException(e) ;
+            LOG.error("Can't open feed: {}", e.getMessage()) ;
+            return ;
         } catch (FeedException e) {
-            throw new RuntimeException(e) ;
+            LOG.error("Can't read feed content: {}", e.getMessage()) ;
+            return ;
         }
     }
 
