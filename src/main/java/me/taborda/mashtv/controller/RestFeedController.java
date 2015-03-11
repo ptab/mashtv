@@ -17,15 +17,15 @@ import me.taborda.mashtv.model.Feed ;
 import me.taborda.mashtv.service.FeedService ;
 
 @RestController
-@RequestMapping("/api/feeds")
-public class RestFeedController {
+@RequestMapping(value = "/api/feeds", produces = "application/json")
+public class RestFeedController extends RestBaseController {
 
     private static final Logger LOG = LoggerFactory.getLogger(RestFeedController.class) ;
 
     @Autowired
     private FeedService feeds ;
 
-    @RequestMapping(value = "")
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public List<Feed> list() {
         return feeds.getAll() ;
     }
@@ -38,7 +38,7 @@ public class RestFeedController {
         return feed ;
     }
 
-    @RequestMapping(value = "/{id}/delete", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable final long id) {
         Feed f = feeds.get(id) ;
         feeds.delete(f) ;
