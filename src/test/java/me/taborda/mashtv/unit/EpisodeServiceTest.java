@@ -1,34 +1,29 @@
 package me.taborda.mashtv.unit ;
 
 import static org.mockito.Matchers.any ;
-import static org.mockito.Matchers.anyString ;
+import static org.mockito.Mockito.mock ;
 import static org.mockito.Mockito.never ;
 import static org.mockito.Mockito.verify ;
 import static org.mockito.Mockito.when ;
-import static org.powermock.api.mockito.PowerMockito.mock ;
-import static org.powermock.api.mockito.PowerMockito.whenNew ;
 
-import java.io.BufferedReader ;
 import java.io.IOException ;
-import java.net.MalformedURLException ;
 import java.net.URL ;
 
 import org.junit.Before ;
+import org.junit.Ignore ;
+import org.junit.Rule ;
 import org.junit.Test ;
-import org.junit.runner.RunWith ;
+import org.junit.rules.ExpectedException ;
 import org.mockito.InjectMocks ;
 import org.mockito.Mock ;
-import org.powermock.core.classloader.annotations.PrepareForTest ;
-import org.powermock.modules.junit4.PowerMockRunner ;
 
 import me.taborda.mashtv.AbstractUnitTest ;
 import me.taborda.mashtv.model.Episode ;
 import me.taborda.mashtv.model.Show ;
 import me.taborda.mashtv.repository.EpisodeRepository ;
+import me.taborda.mashtv.service.EpisodeInfo ;
 import me.taborda.mashtv.service.EpisodeService ;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(EpisodeService.class)
 public class EpisodeServiceTest extends AbstractUnitTest {
 
     private static final String EPISODE_INFO = "episodes/ok.txt" ;
@@ -44,7 +39,13 @@ public class EpisodeServiceTest extends AbstractUnitTest {
     private EpisodeRepository repository ;
 
     @Mock
+    private EpisodeInfo episodeInfo ;
+
+    @Mock
     private Episode episode ;
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none() ;
 
     @Override
     @Before
@@ -56,35 +57,35 @@ public class EpisodeServiceTest extends AbstractUnitTest {
     }
 
     @Test
-    public void updateTitle() throws Exception {
-        whenNew(URL.class).withArguments(anyString()).thenReturn(getResource(EPISODE_INFO)) ;
+    public void updateTitle() {
+        when(episodeInfo.getEpisodeInfoURL(episode)).thenReturn(getResource(EPISODE_INFO)) ;
         victim.updateTitle(episode) ;
         verify(episode).setTitle(EXPECTED_TITLE) ;
         verify(repository).save(episode) ;
     }
 
     @Test
-    public void updateTitleShouldNotCompleteWhenNoTitleOnEpisodeInfo() throws Exception {
-        whenNew(URL.class).withArguments(anyString()).thenReturn(getResource(EPISODE_INFO_WITHOUT_TITLE)) ;
+    public void updateTitleShouldNotCompleteWhenNoTitleOnEpisodeInfo() {
+        when(episodeInfo.getEpisodeInfoURL(episode)).thenReturn(getResource(EPISODE_INFO_WITHOUT_TITLE)) ;
         victim.updateTitle(episode) ;
         verify(repository, never()).save(any(Episode.class)) ;
     }
 
     @Test
-    public void updateTitleShouldNotCompleteWhenMalformedURL() throws Exception {
-        whenNew(URL.class).withArguments(anyString()).thenThrow(new MalformedURLException()) ;
+    public void updateTitleShouldNotCompleteWhenNoURL() {
+        when(episodeInfo.getEpisodeInfoURL(episode)).thenReturn(null) ;
         victim.updateTitle(episode) ;
         verify(repository, never()).save(any(Episode.class)) ;
     }
 
     @Test
-    @SuppressWarnings("resource")
+    @Ignore("can't mock URL, don't want to pollute the sources just for this..")
     public void updateTitleShouldNotCompleteWhenIOException() throws Exception {
-        // prevent the unit test from creating the real URL
-        whenNew(URL.class).withArguments(anyString()).thenReturn(getResource(EPISODE_INFO)) ;
-        BufferedReader reader = mock(BufferedReader.class) ;
-        when(reader.readLine()).thenThrow(new IOException()) ;
-        whenNew(BufferedReader.class).withAnyArguments().thenReturn(reader) ;
+        URL url = mock(URL.class) ;
+        when(url.openStream()).thenThrow(new IOException()) ;
+        when(episodeInfo.getEpisodeInfoURL(episode)).thenReturn(url) ;
+        exception.expect(IOException.class) ;
+
         victim.updateTitle(episode) ;
         verify(repository, never()).save(any(Episode.class)) ;
     }
