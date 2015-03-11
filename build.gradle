@@ -1,6 +1,8 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'spring-boot'
+apply plugin: 'findbugs'
+apply plugin: 'pmd'
 
 group = 'me.taborda'
 version = '0.3-SNAPSHOT'
@@ -40,3 +42,14 @@ dependencies {
 
 tasks.withType(JavaCompile) { options.encoding = "UTF-8" }
 
+
+findbugs { ignoreFailures = true }
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+pmd { ignoreFailures = true }
