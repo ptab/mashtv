@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Configuration ;
 @SpringApplicationConfiguration
 public abstract class AbstractIntegrationTest extends AbstractTest {
 
-    @ComponentScan
     @Configuration
+    @ComponentScan({ "me.taborda.mashtv.repository", "me.taborda.mashtv.service" })
     @EnableAutoConfiguration
     static class TestConfig {
 

@@ -22,7 +22,6 @@ import com.rometools.rome.io.SyndFeedInput ;
 import com.rometools.rome.io.XmlReader ;
 
 import me.taborda.mashtv.AbstractUnitTest ;
-
 import me.taborda.mashtv.model.Feed ;
 import me.taborda.mashtv.repository.FeedRepository ;
 import me.taborda.mashtv.service.EpisodeService ;

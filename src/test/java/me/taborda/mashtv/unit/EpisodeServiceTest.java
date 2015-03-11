@@ -22,7 +22,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest ;
 import org.powermock.modules.junit4.PowerMockRunner ;
 
 import me.taborda.mashtv.AbstractUnitTest ;
-
 import me.taborda.mashtv.model.Episode ;
 import me.taborda.mashtv.model.Show ;
 import me.taborda.mashtv.repository.EpisodeRepository ;
