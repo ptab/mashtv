@@ -1,10 +1,9 @@
 package me.taborda.mashtv.unit ;
 
+import static org.mockito.Mockito.verifyNoMoreInteractions ;
 import static org.mockito.Mockito.when ;
 
-import org.junit.Rule ;
 import org.junit.Test ;
-import org.junit.rules.ExpectedException ;
 import org.mockito.InjectMocks ;
 import org.mockito.Mock ;
 
@@ -32,16 +31,12 @@ public class FeedServiceTest extends AbstractUnitTest {
     @Mock
     private Feed feed ;
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none() ;
-
     @Test
-    public void loadShouldFailWhenMalformedURL() {
+    public void loadShouldNotFailWhenMalformedURL() {
         String url = "malformed URL" ;
         when(feed.getUrl()).thenReturn(url) ;
-        exception.expect(RuntimeException.class) ;
-        exception.expectMessage("Invalid feed URL: " + url) ;
         victim.load(feed) ;
+        verifyNoMoreInteractions(shows, episodes) ;
     }
 
 }
