@@ -1,9 +1,10 @@
 package me.taborda.mashtv.controller ;
 
-import org.springframework.stereotype.Controller ;
-import org.springframework.ui.Model ;
-import org.springframework.web.bind.annotation.PathVariable ;
-import org.springframework.web.bind.annotation.RequestMapping ;
+import me.taborda.mashtv.model.Show;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class HtmlController {
@@ -18,9 +19,9 @@ public class HtmlController {
         return "shows" ;
     }
 
-    @RequestMapping("/shows/{id}")
-    public String showinfo(@PathVariable final int id, final Model model) {
-        model.addAttribute("showId", id) ;
+    @RequestMapping("/shows/{show}")
+    public String showinfo(@ModelAttribute final Show show, final Model model) {
+        model.addAttribute("show", show) ;
         return "showinfo" ;
     }
 }

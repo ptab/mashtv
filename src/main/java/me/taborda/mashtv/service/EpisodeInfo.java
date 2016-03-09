@@ -19,7 +19,7 @@ public class EpisodeInfo {
         try {
             return new URL(String.format(EPISODE_INFO_URL, episode.getShow().getTitle().replaceFirst("The ", ""), episode.getSeason(), episode)) ;
         } catch (MalformedURLException e) {
-            LOG.error("Could not build URL", e) ;
+            LOG.warn("Invalid URL", e.getMessage()) ;
             return null ;
         }
     }

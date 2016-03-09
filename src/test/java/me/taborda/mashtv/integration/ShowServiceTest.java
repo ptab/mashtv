@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired ;
 import me.taborda.mashtv.AbstractIntegrationTest ;
 
 import me.taborda.mashtv.service.ShowService ;
-import me.taborda.mashtv.NonUniqueException ;
+import me.taborda.mashtv.exception.NonUniqueException;
 import me.taborda.mashtv.model.Show ;
 import me.taborda.mashtv.repository.ShowRepository ;
 

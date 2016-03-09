@@ -13,7 +13,7 @@ import org.springframework.data.domain.Sort ;
 import org.springframework.data.domain.Sort.Direction ;
 
 import me.taborda.mashtv.AbstractIntegrationTest ;
-import me.taborda.mashtv.NonUniqueException ;
+import me.taborda.mashtv.exception.NonUniqueException;
 import me.taborda.mashtv.model.Episode ;
 import me.taborda.mashtv.model.Feed ;
 import me.taborda.mashtv.model.Show ;

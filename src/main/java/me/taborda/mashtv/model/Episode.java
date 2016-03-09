@@ -101,7 +101,7 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
                 return t ;
             }
         }
-        LOG.error("No torrent with id " + id + " for episode " + getId()) ;
+        LOG.warn("No link with id " + id + " for episode " + getId()) ;
         return null ;
     }
 

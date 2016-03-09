@@ -7,7 +7,7 @@ import javax.annotation.Resource ;
 import org.springframework.stereotype.Service ;
 import org.springframework.transaction.annotation.Transactional ;
 
-import me.taborda.mashtv.NonUniqueException ;
+import me.taborda.mashtv.exception.NonUniqueException;
 
 import me.taborda.mashtv.model.Show ;
 import me.taborda.mashtv.repository.ShowRepository ;

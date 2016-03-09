@@ -1,4 +1,4 @@
-package me.taborda.mashtv ;
+package me.taborda.mashtv.exception;
 
 public class NonUniqueException extends RuntimeException {
 

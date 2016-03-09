@@ -16,7 +16,7 @@
     <div th:replace="fragments/navigation :: navigation(shows)"></div>
 
     <div class="container">      
-        <form action="api/shows/add" method="post" class="form-inline">
+        <form th:action="@{/api/shows}" method="post" class="form-inline">
             <div class="form-group">
                 <input name="title" type="text" class="form-control" placeholder="Enter a show title" />
             </div>

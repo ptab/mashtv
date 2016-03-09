@@ -72,7 +72,7 @@ public class EpisodeService {
                 }
             }
         } catch (IOException e) {
-            LOG.error("Could not read from stream", e) ;
+            LOG.warn("Unable to update episode info", e) ;
         }
     }
 

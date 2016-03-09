@@ -9,4 +9,4 @@ $(document).ready(function() {
 
 displayItem = function(item) {
     return item.url;
-}
+};

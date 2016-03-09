@@ -11,7 +11,7 @@ loadTable = function(url, displayItem, highlight) {
 
             removeButton.click(function() {
                 $.ajax({
-                    url : url + "/" + id + "/delete",
+                    url : url + "/" + id,
                     type : 'DELETE',
                     success : function(result) {
                         loadTable(url, displayItem);
@@ -60,13 +60,13 @@ overrideFormSubmits = function(success) {
 
         ev.preventDefault();
     });
-}
+};
 
 flashElement = function(element, classname) {
     element.addClass(classname).delay(3000).queue(function() {
         $(this).removeClass(classname).dequeue();
     });
-}
+};
 
 markForm = function(element, className, glyphicon) {
     element.removeClass();
@@ -77,7 +77,7 @@ markForm = function(element, className, glyphicon) {
         "class" : "glyphicon " + glyphicon + " form-control-feedback",
         "aria-hidden" : "true"
     }));
-}
+};
 
 showError = function(message) {
     var button = $("<button/>", {
@@ -100,4 +100,4 @@ showError = function(message) {
     $("<div/>", {
         "class" : "alert alert-danger alert-dismissible",
     }).append(icon).append("<span> " + message + "</span>").append(button).prependTo($("form"));
-}
+};

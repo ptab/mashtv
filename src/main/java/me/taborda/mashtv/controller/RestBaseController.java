@@ -18,7 +18,7 @@ public class RestBaseController {
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public Exception handleException(final Exception e, final HttpServletResponse response) throws IOException {
-        LOG.warn(e.getMessage(), e) ;
+        LOG.warn(e.getMessage()) ;
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage()) ;
         return e ;
     }

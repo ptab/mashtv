@@ -16,7 +16,7 @@
     <div th:replace="fragments/navigation :: navigation(feeds)"></div>
 
     <div class="container">
-        <form action="api/feeds/add" method="post" class="form-inline">
+        <form th:action="@{/api/feeds}" method="post" class="form-inline">
             <div class="form-group">
                 <input name="url" type="text" class="form-control" placeholder="Enter a feed URL" />
             </div>

@@ -3,6 +3,7 @@ package me.taborda.mashtv.model ;
 import java.util.ArrayList ;
 import java.util.Collections ;
 import java.util.List ;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType ;
 import javax.persistence.Column ;
@@ -11,6 +12,7 @@ import javax.persistence.OneToMany ;
 import javax.validation.constraints.NotNull ;
 import javax.validation.constraints.Size ;
 
+import me.taborda.mashtv.exception.EpisodeNotFoundException;
 import org.apache.commons.lang3.text.WordUtils ;
 
 @Entity
@@ -30,7 +32,7 @@ public class Show extends AbstractEntity implements Comparable<Show> {
         // hibernate && JPA
     }
 
-    public Show(final String title) {
+    public Show(@NotNull final String title) {
         this.title = WordUtils.capitalizeFully(title).trim() ;
     }
 
@@ -38,17 +40,20 @@ public class Show extends AbstractEntity implements Comparable<Show> {
         return title ;
     }
 
+    public List<Integer> getSeasons() {
+        return episodes.stream().map(Episode::getSeason).distinct().collect(Collectors.toList());
+    }
+
     public List<Episode> getEpisodes() {
         return Collections.unmodifiableList(episodes) ;
     }
 
+    public List<Episode> getEpisodes(int season) {
+        return episodes.stream().filter(e -> e.getSeason() == season).collect(Collectors.toList());
+    }
+
     public Episode getEpisode(final int season, final int episode) {
-        for (Episode e : episodes) {
-            if (e.getSeason() == season && e.getEpisode() == episode) {
-                return e ;
-            }
-        }
-        return null ;
+        return episodes.stream().filter(e -> e.getSeason() == season && e.getEpisode() == episode).findAny().orElseThrow(() -> new EpisodeNotFoundException(this, season, episode)) ;
     }
 
     public Episode addEpisode(final int season, final int episode) {

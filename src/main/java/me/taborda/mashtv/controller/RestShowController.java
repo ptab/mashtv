@@ -32,63 +32,54 @@ public class RestShowController extends RestBaseController {
     @Autowired
     private EpisodeService episodes ;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public List<Show> list() {
         return shows.findAll() ;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.POST)
+    @RequestMapping(value = "", method = RequestMethod.POST)
     public Show add(@NotNull final String title) {
         Show show = shows.add(title) ;
         LOG.info("Added TV Show: " + show.getTitle()) ;
         return show ;
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Show getShow(@PathVariable final long id) {
-        return shows.find(id) ;
+    @RequestMapping(value = "/{show}", method = RequestMethod.GET)
+    public Show getShow(@ModelAttribute final Show show) {
+        return show ;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable final long id) {
-        Show show = shows.find(id) ;
+    public void delete(@ModelAttribute final Show show) {
         shows.delete(show) ;
         LOG.info("Removed TV Show: {}", show) ;
     }
 
-    @RequestMapping(value = "/{id}/episodes", method = RequestMethod.GET)
-    public List<Episode> listEpisodes(@PathVariable final long id) {
-        Show show = shows.find(id) ;
+    @RequestMapping(value = "/{show}/episodes", method = RequestMethod.GET)
+    public List<Episode> listEpisodes(@ModelAttribute final Show show) {
         return show.getEpisodes() ;
     }
 
-    @RequestMapping(value = "/{id}/episodes/{season}/{episode}", method = RequestMethod.GET)
-    public Episode getEpisode(@PathVariable final long id, @PathVariable final Integer season, @PathVariable final Integer episode) {
-        Show show = shows.find(id) ;
-        return findEpisode(show, season, episode) ;
+    @RequestMapping(value = "/{show}/episodes/{season}", method = RequestMethod.GET)
+    public List<Episode> listEpisodes(@ModelAttribute final Show show, @PathVariable final Integer season) {
+        return show.getEpisodes(season) ;
     }
 
-    @RequestMapping(value = "/{id}/episodes/{season}/{episode}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{show}/episodes/{season}/{episode}", method = RequestMethod.GET)
+    public Episode getEpisode(@ModelAttribute final Show show, @PathVariable final Integer season, @PathVariable final Integer episode) {
+        return show.getEpisode(season, episode) ;
+    }
+
+    @RequestMapping(value = "/{show}/episodes/{season}/{episode}", method = RequestMethod.DELETE)
     public void delete(@ModelAttribute final Show show, @PathVariable final Integer season, @PathVariable final Integer episode) {
-        Episode e = findEpisode(show, season, episode) ;
+        Episode e = show.getEpisode(season, episode) ;
         episodes.delete(e) ;
         LOG.info("Removed episode: {}", e) ;
     }
 
-    @RequestMapping(value = "/{id}/episodes/{season}/{episode}/torrents", method = RequestMethod.GET)
+    @RequestMapping(value = "/{show}/episodes/{season}/{episode}/links", method = RequestMethod.GET)
     public Set<MagnetLink> torrents(@ModelAttribute final Show show, @PathVariable final Integer season, @PathVariable final Integer episode) {
-        Episode e = findEpisode(show, season, episode) ;
-        return e.getMagnetLinks() ;
-    }
-
-    private Episode findEpisode(final Show show, final int season, final int episode) {
-        Episode ep = show.getEpisode(season, episode) ;
-        if (ep == null) {
-            LOG.error("No episode on {} with season {} and episode {}", show, season, episode) ;
-            throw new RuntimeException(String.format("No episode on %s with season %d and episode %d", show, season, episode)) ;
-        }
-
-        return ep ;
+        return show.getEpisode(season, episode).getMagnetLinks() ;
     }
 
 }
