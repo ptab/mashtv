@@ -12,6 +12,7 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import me.taborda.mashtv.exception.EpisodeNotFoundException;
 import org.apache.commons.lang3.text.WordUtils;
 import org.slf4j.Logger;
@@ -43,8 +44,9 @@ public class Show extends AbstractEntity implements Comparable<Show> {
         return title;
     }
 
+    @JsonIgnore
     public List<Integer> getSeasons() {
-        return episodes.stream().map(Episode::getSeason).distinct().collect(Collectors.toList());
+        return episodes.stream().map(Episode::getSeason).distinct().sorted().collect(Collectors.toList());
     }
 
     public List<Episode> getEpisodes() {
@@ -52,7 +54,7 @@ public class Show extends AbstractEntity implements Comparable<Show> {
     }
 
     public List<Episode> getEpisodes(int season) {
-        return episodes.stream().filter(e -> e.getSeason() == season).collect(Collectors.toList());
+        return episodes.stream().filter(e -> e.getSeason() == season).sorted().collect(Collectors.toList());
     }
 
     public Optional<Episode> findEpisode(final int season, final int episode) {

@@ -13,7 +13,7 @@ loadTable = function(url, displayItem, highlight) {
                 $.ajax({
                     url : url + "/" + id,
                     type : 'DELETE',
-                    success : function(result) {
+                    success: function () {
                         loadTable(url, displayItem);
                     }
                 });
@@ -98,6 +98,6 @@ showError = function(message) {
     });
 
     $("<div/>", {
-        "class" : "alert alert-danger alert-dismissible",
+        "class" : "alert alert-danger alert-dismissible"
     }).append(icon).append("<span> " + message + "</span>").append(button).prependTo($("form"));
 };
