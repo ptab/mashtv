@@ -20,7 +20,7 @@ import me.taborda.mashtv.repository.EpisodeRepository ;
 import me.taborda.mashtv.repository.ShowRepository ;
 import me.taborda.mashtv.service.EpisodeService ;
 
-public class EpisodeServiceTest extends AbstractIntegrationTest {
+public class EpisodeServiceIntegrationTest extends AbstractIntegrationTest {
 
     private static final int EXPECTED_EPISODES = 5 ;
 

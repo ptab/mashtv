@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,8 +13,8 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
-import me.taborda.mashtv.exception.NonUniqueException;
 import me.taborda.mashtv.Util;
+import me.taborda.mashtv.exception.NonUniqueException;
 import me.taborda.mashtv.model.Episode;
 import me.taborda.mashtv.model.Feed;
 import me.taborda.mashtv.model.Show;
@@ -58,9 +59,8 @@ public class FeedService {
 
     @Transactional
     public Feed add(final String url) {
-        Feed existing = repository.findByUrlIgnoreCase(url);
-        if (existing != null) {
-            throw new NonUniqueException(existing.getUrl());
+        if (repository.findByUrlIgnoreCase(url).isPresent()) {
+            throw new NonUniqueException(url);
         }
         return repository.save(new Feed(url));
     }
@@ -95,24 +95,19 @@ public class FeedService {
         int episodeNumber = Integer.parseInt(matcher.group(3));
         boolean hd = HD_PATTERN.matcher(entry.getTitle()).matches();
 
-        Show show = shows.find(showTitle);
-        if (show == null) {
+        Optional<Show> show = shows.find(showTitle);
+        if (!show.isPresent()) {
             LOG.debug("Not on the list: {} ({})", showTitle, entry.getTitle());
             return;
         }
 
-        Episode episode = show.getEpisode(seasonNumber, episodeNumber);
-        if (episode == null) {
-            episode = show.addEpisode(seasonNumber, episodeNumber);
-            LOG.info("Added episode: {}", episode);
-        }
+        Episode episode = show.get().findEpisode(seasonNumber, episodeNumber).orElseGet(() -> show.get().addEpisode(seasonNumber, episodeNumber)) ;
 
         if (episode.isTitleUnknown()) {
             episodes.updateTitle(episode);
         }
 
         episode.addMagnetLink(entry.getLink(), entry.getTitle(), hd);
-        LOG.info("Added new link: {}", entry.getTitle());
 
         episodes.save(episode);
     }

@@ -1,10 +1,11 @@
 package me.taborda.mashtv.repository ;
 
-import org.springframework.data.jpa.repository.JpaRepository ;
+import java.util.Optional;
 
-import me.taborda.mashtv.model.Feed ;
+import me.taborda.mashtv.model.Feed;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FeedRepository extends JpaRepository<Feed, Long> {
 
-    Feed findByUrlIgnoreCase(String url) ;
+    Optional<Feed> findByUrlIgnoreCase(String url) ;
 }

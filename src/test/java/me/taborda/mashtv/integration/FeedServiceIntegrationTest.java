@@ -22,7 +22,7 @@ import me.taborda.mashtv.repository.FeedRepository ;
 import me.taborda.mashtv.repository.ShowRepository ;
 import me.taborda.mashtv.service.FeedService ;
 
-public class FeedServiceTest extends AbstractIntegrationTest {
+public class FeedServiceIntegrationTest extends AbstractIntegrationTest {
 
     private static final Sort SORT_ORDER = new Sort(Direction.DESC, "season", "episode") ;
 
@@ -53,8 +53,8 @@ public class FeedServiceTest extends AbstractIntegrationTest {
     @Test
     public void add() {
         String url = "a url" ;
-        Feed feed = victim.add(url) ;
-        assertEquals(url, feed.getUrl()) ;
+        assertEquals(url, victim.add(url).getUrl()) ;
+        assertEquals(url, repository.findByUrlIgnoreCase(url).get().getUrl());
     }
 
     @Test(expected = NonUniqueException.class)

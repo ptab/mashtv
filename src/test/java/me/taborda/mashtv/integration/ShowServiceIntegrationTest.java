@@ -15,7 +15,7 @@ import me.taborda.mashtv.exception.NonUniqueException;
 import me.taborda.mashtv.model.Show ;
 import me.taborda.mashtv.repository.ShowRepository ;
 
-public class ShowServiceTest extends AbstractIntegrationTest {
+public class ShowServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private ShowService victim ;
@@ -43,7 +43,7 @@ public class ShowServiceTest extends AbstractIntegrationTest {
     @Test
     public void findByTitle() {
         Show show = victim.add("A Show Title") ;
-        assertEquals(show, victim.find("a sHoW tiTle")) ;
+        assertEquals(show, victim.find("a sHoW tiTle").get()) ;
     }
 
     @Test

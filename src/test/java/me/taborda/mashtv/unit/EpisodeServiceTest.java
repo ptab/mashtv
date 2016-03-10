@@ -1,28 +1,28 @@
 package me.taborda.mashtv.unit ;
 
-import static org.mockito.Matchers.any ;
-import static org.mockito.Mockito.mock ;
-import static org.mockito.Mockito.never ;
-import static org.mockito.Mockito.verify ;
-import static org.mockito.Mockito.when ;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import java.io.IOException ;
-import java.net.URL ;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Optional;
 
-import org.junit.Before ;
-import org.junit.Ignore ;
-import org.junit.Rule ;
-import org.junit.Test ;
-import org.junit.rules.ExpectedException ;
-import org.mockito.InjectMocks ;
-import org.mockito.Mock ;
-
-import me.taborda.mashtv.AbstractUnitTest ;
-import me.taborda.mashtv.model.Episode ;
-import me.taborda.mashtv.model.Show ;
-import me.taborda.mashtv.repository.EpisodeRepository ;
-import me.taborda.mashtv.service.EpisodeInfo ;
-import me.taborda.mashtv.service.EpisodeService ;
+import me.taborda.mashtv.AbstractUnitTest;
+import me.taborda.mashtv.model.Episode;
+import me.taborda.mashtv.model.Show;
+import me.taborda.mashtv.repository.EpisodeRepository;
+import me.taborda.mashtv.service.EpisodeInfo;
+import me.taborda.mashtv.service.EpisodeService;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 public class EpisodeServiceTest extends AbstractUnitTest {
 
@@ -58,7 +58,7 @@ public class EpisodeServiceTest extends AbstractUnitTest {
 
     @Test
     public void updateTitle() {
-        when(episodeInfo.getEpisodeInfoURL(episode)).thenReturn(getResource(EPISODE_INFO)) ;
+        when(episodeInfo.getEpisodeInfoURL(episode)).thenReturn(Optional.of(getResource(EPISODE_INFO))) ;
         victim.updateTitle(episode) ;
         verify(episode).setTitle(EXPECTED_TITLE) ;
         verify(repository).save(episode) ;
@@ -66,14 +66,14 @@ public class EpisodeServiceTest extends AbstractUnitTest {
 
     @Test
     public void updateTitleShouldNotCompleteWhenNoTitleOnEpisodeInfo() {
-        when(episodeInfo.getEpisodeInfoURL(episode)).thenReturn(getResource(EPISODE_INFO_WITHOUT_TITLE)) ;
+        when(episodeInfo.getEpisodeInfoURL(episode)).thenReturn(Optional.of(getResource(EPISODE_INFO_WITHOUT_TITLE))) ;
         victim.updateTitle(episode) ;
         verify(repository, never()).save(any(Episode.class)) ;
     }
 
     @Test
     public void updateTitleShouldNotCompleteWhenNoURL() {
-        when(episodeInfo.getEpisodeInfoURL(episode)).thenReturn(null) ;
+        when(episodeInfo.getEpisodeInfoURL(episode)).thenReturn(Optional.empty()) ;
         victim.updateTitle(episode) ;
         verify(repository, never()).save(any(Episode.class)) ;
     }
@@ -83,7 +83,7 @@ public class EpisodeServiceTest extends AbstractUnitTest {
     public void updateTitleShouldNotCompleteWhenIOException() throws Exception {
         URL url = mock(URL.class) ;
         when(url.openStream()).thenThrow(new IOException()) ;
-        when(episodeInfo.getEpisodeInfoURL(episode)).thenReturn(url) ;
+        when(episodeInfo.getEpisodeInfoURL(episode)).thenReturn(Optional.of(url)) ;
         exception.expect(IOException.class) ;
 
         victim.updateTitle(episode) ;

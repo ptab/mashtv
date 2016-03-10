@@ -1,16 +1,14 @@
 package me.taborda.mashtv.service ;
 
-import java.util.List ;
-
-import javax.annotation.Resource ;
-
-import org.springframework.stereotype.Service ;
-import org.springframework.transaction.annotation.Transactional ;
+import java.util.List;
+import java.util.Optional;
+import javax.annotation.Resource;
 
 import me.taborda.mashtv.exception.NonUniqueException;
-
-import me.taborda.mashtv.model.Show ;
-import me.taborda.mashtv.repository.ShowRepository ;
+import me.taborda.mashtv.model.Show;
+import me.taborda.mashtv.repository.ShowRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ShowService {
@@ -24,7 +22,7 @@ public class ShowService {
     }
 
     @Transactional(readOnly = true)
-    public Show find(final String title) {
+    public Optional<Show> find(final String title) {
         return repository.findByTitleIgnoreCase(title) ;
     }
 
@@ -35,9 +33,8 @@ public class ShowService {
 
     @Transactional
     public Show add(final String title) {
-        Show existing = find(title) ;
-        if (existing != null) {
-            throw new NonUniqueException(existing.getTitle()) ;
+        if (find(title).isPresent()) {
+            throw new NonUniqueException(title) ;
         }
 
         return repository.save(new Show(title)) ;

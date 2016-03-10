@@ -1,26 +1,25 @@
 package me.taborda.mashtv.service ;
 
-import java.io.BufferedReader ;
-import java.io.IOException ;
-import java.io.InputStreamReader ;
-import java.net.URL ;
-import java.util.List ;
-import java.util.regex.Matcher ;
-import java.util.regex.Pattern ;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.annotation.Resource;
 
-import javax.annotation.Resource ;
-
-import org.slf4j.Logger ;
-import org.slf4j.LoggerFactory ;
-import org.springframework.beans.factory.annotation.Autowired ;
-import org.springframework.data.domain.Sort ;
-import org.springframework.data.domain.Sort.Direction ;
-import org.springframework.stereotype.Service ;
-import org.springframework.transaction.annotation.Transactional ;
-
-import me.taborda.mashtv.model.Episode ;
-import me.taborda.mashtv.model.Show ;
-import me.taborda.mashtv.repository.EpisodeRepository ;
+import me.taborda.mashtv.model.Episode;
+import me.taborda.mashtv.model.Show;
+import me.taborda.mashtv.repository.EpisodeRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EpisodeService {
@@ -54,13 +53,13 @@ public class EpisodeService {
 
     @Transactional
     public void updateTitle(final Episode episode) {
-        URL url = episodeInfo.getEpisodeInfoURL(episode) ;
-        if (url == null) {
+        Optional<URL> url = episodeInfo.getEpisodeInfoURL(episode) ;
+        if (! url.isPresent()) {
             return ;
         }
 
         LOG.debug("url: " + url.toString()) ;
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()))) {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(url.get().openStream()))) {
             String line ;
 
             while ((line = in.readLine()) != null) {

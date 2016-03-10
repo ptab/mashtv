@@ -1,10 +1,11 @@
 package me.taborda.mashtv.repository ;
 
-import org.springframework.data.jpa.repository.JpaRepository ;
+import java.util.Optional;
 
-import me.taborda.mashtv.model.Show ;
+import me.taborda.mashtv.model.Show;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ShowRepository extends JpaRepository<Show, Long> {
 
-    Show findByTitleIgnoreCase(String title) ;
+    Optional<Show> findByTitleIgnoreCase(String title) ;
 }
