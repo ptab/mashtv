@@ -2,15 +2,16 @@
 
 ### TODO
 #### Features
-* select shows from a list, not from user input
-* show page
-* match daily shows (with date instead of _S01E02_)
+* tvrage is gone, implement some other service (tvbd?)
+* select shows from a list based on input
+* enrich show page with show details
+* add link to /swagger-ui.html
+
 
 #### Issues
-* episodes with . in the name are screwed . matches the link, but doesn't find it on DB
+
 
 #### Code quality
-* understand why swagger needs `@RequestMapping(method = Request.method)` even though it's the default
 * checkstyle gradle plugin
 * publish those reports somewhere
 * add link to coveralls.io

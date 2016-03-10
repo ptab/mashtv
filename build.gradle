@@ -29,13 +29,12 @@ dependencies {
     compile "com.rometools:rome:1.5.1"
     compile "commons-io:commons-io:2.4"
     compile "org.apache.commons:commons-lang3:3.3.2"
-    compile "com.mangofactory:swagger-springmvc:0.9.5"
-    compile "org.ajar:swagger-spring-mvc-ui:0.4"
+    compile "io.springfox:springfox-swagger2:2.4.0"
+    compile "io.springfox:springfox-swagger-ui:2.4.0"
     testCompile "org.springframework.boot:spring-boot-starter-test"
 }
 
 tasks.withType(JavaCompile) { options.encoding = "UTF-8" }
-
 
 findbugs { ignoreFailures = true }
 
