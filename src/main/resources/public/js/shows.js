@@ -1,12 +1,13 @@
-var url = "api/shows";
-
 $(document).ready(function() {
-    loadTable(url, displayItem);
+    loadTable('api/shows', displayItem);
     overrideFormSubmits(function(highlightItemId) {
-        loadTable(url, displayItem, highlightItemId);
+        loadTable('api/shows', displayItem, highlightItemId);
     });
 });
 
 displayItem = function(item) {
-    return item.title;
+    return $('<td/>').append($('<a/>', {
+        href : 'shows/' + item.id,
+        'class' : 'link-to-show'
+    }).append(item.title));
 };

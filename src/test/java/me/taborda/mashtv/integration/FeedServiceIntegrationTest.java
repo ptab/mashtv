@@ -6,13 +6,13 @@ import java.util.ArrayList ;
 import java.util.Collections ;
 import java.util.List ;
 
+import me.taborda.mashtv.AbstractIntegrationTest;
 import org.junit.After ;
 import org.junit.Test ;
 import org.springframework.beans.factory.annotation.Autowired ;
 import org.springframework.data.domain.Sort ;
 import org.springframework.data.domain.Sort.Direction ;
 
-import me.taborda.mashtv.AbstractIntegrationTest ;
 import me.taborda.mashtv.exception.NonUniqueException;
 import me.taborda.mashtv.model.Episode ;
 import me.taborda.mashtv.model.Feed ;

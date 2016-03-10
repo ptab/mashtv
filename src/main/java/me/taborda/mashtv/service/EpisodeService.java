@@ -34,7 +34,7 @@ public class EpisodeService {
     private EpisodeRepository repository ;
 
     @Autowired
-    private EpisodeInfo episodeInfo ;
+    private EpisodeDetailsFetcher episodeDetailsFetcher;
 
     @Transactional(readOnly = true)
     public List<Episode> findLatest(final Show show) {
@@ -53,7 +53,7 @@ public class EpisodeService {
 
     @Transactional
     public void updateTitle(final Episode episode) {
-        Optional<URL> url = episodeInfo.getEpisodeInfoURL(episode) ;
+        Optional<URL> url = episodeDetailsFetcher.getEpisodeInfoURL(episode) ;
         if (! url.isPresent()) {
             return ;
         }

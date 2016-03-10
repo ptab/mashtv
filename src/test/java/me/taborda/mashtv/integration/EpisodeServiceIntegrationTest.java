@@ -1,24 +1,21 @@
 package me.taborda.mashtv.integration ;
 
-import static org.junit.Assert.assertEquals ;
+import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList ;
-import java.util.Collections ;
-import java.util.List ;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import org.junit.After ;
-import org.junit.Before ;
-import org.junit.Ignore ;
-import org.junit.Test ;
-import org.springframework.beans.factory.annotation.Autowired ;
-
-import me.taborda.mashtv.AbstractIntegrationTest ;
-
-import me.taborda.mashtv.model.Episode ;
-import me.taborda.mashtv.model.Show ;
-import me.taborda.mashtv.repository.EpisodeRepository ;
-import me.taborda.mashtv.repository.ShowRepository ;
-import me.taborda.mashtv.service.EpisodeService ;
+import me.taborda.mashtv.AbstractIntegrationTest;
+import me.taborda.mashtv.model.Episode;
+import me.taborda.mashtv.model.Show;
+import me.taborda.mashtv.repository.EpisodeRepository;
+import me.taborda.mashtv.repository.ShowRepository;
+import me.taborda.mashtv.service.EpisodeService;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class EpisodeServiceIntegrationTest extends AbstractIntegrationTest {
 
@@ -46,7 +43,6 @@ public class EpisodeServiceIntegrationTest extends AbstractIntegrationTest {
         shows.deleteAll() ;
     }
 
-    @Ignore("findTop5ByShow returns all the entries, not just the top 5")
     @Test
     public void findLatest() {
         // given a repository populated with episodes from different shows

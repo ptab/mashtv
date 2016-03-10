@@ -4,11 +4,10 @@ import static org.hamcrest.Matchers.contains ;
 import static org.junit.Assert.assertEquals ;
 import static org.junit.Assert.assertThat ;
 
+import me.taborda.mashtv.AbstractIntegrationTest;
 import org.junit.After ;
 import org.junit.Test ;
 import org.springframework.beans.factory.annotation.Autowired ;
-
-import me.taborda.mashtv.AbstractIntegrationTest ;
 
 import me.taborda.mashtv.service.ShowService ;
 import me.taborda.mashtv.exception.NonUniqueException;

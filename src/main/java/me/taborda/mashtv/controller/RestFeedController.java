@@ -25,7 +25,7 @@ public class RestFeedController extends RestBaseController {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public List<Feed> list() {
-        return feeds.getAll() ;
+        return feeds.findAll() ;
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)

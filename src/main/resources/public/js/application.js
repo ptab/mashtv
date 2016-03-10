@@ -3,15 +3,14 @@ loadTable = function(url, displayItem, highlight) {
         var items = [];
         $.each(data, function() {
             var id = this.id;
-            var display = displayItem(this);
 
-            var removeButton = $("<span/>", {
-                "class" : "glyphicon glyphicon-remove pull-right"
+            var removeButton = $('<span/>', {
+                'class' : 'fa fa-trash-o pull-right'
             });
 
             removeButton.click(function() {
                 $.ajax({
-                    url : url + "/" + id,
+                    url : url + '/' + id,
                     type : 'DELETE',
                     success: function () {
                         loadTable(url, displayItem);
@@ -19,20 +18,20 @@ loadTable = function(url, displayItem, highlight) {
                 });
             });
 
-            var tr = $("<tr/>");
+            var tr = $('<tr/>');
             if (this.id === highlight) {
-                flashElement(tr, "success");
+                flashElement(tr, 'success');
             }
 
-            items.push(tr.append($("<td/>").append(display)).append($("<td/>").append(removeButton)));
+            items.push(tr.append(displayItem(this)).append($('<td/>').append(removeButton)));
         });
 
         items = items.sort(function(a, b) {
             // this can be done better..
-            return a.children("td:first")[0].outerText.localeCompare(b.children("td:first")[0].outerText);
+            return a.children('td:first')[0].outerText.localeCompare(b.children('td:first')[0].outerText);
         });
 
-        var table = $("table");
+        var table = $('table');
         table.children().remove();
         table.append(items);
     });
@@ -40,7 +39,7 @@ loadTable = function(url, displayItem, highlight) {
 
 overrideFormSubmits = function(success) {
     // setup the on submit trigger
-    var frm = $("form");
+    var frm = $('form');
     frm.submit(function(ev) {
         var request = $.ajax({
             type : frm.attr('method'),
@@ -68,36 +67,36 @@ flashElement = function(element, classname) {
     });
 };
 
-markForm = function(element, className, glyphicon) {
+markForm = function(element, className, icon) {
     element.removeClass();
-    element.addClass("form-group " + className + " has-feedback");
+    element.addClass('form-group ' + className + ' has-feedback');
 
-    element.children("span.glyphicon").remove();
-    element.append($("<span/>", {
-        "class" : "glyphicon " + glyphicon + " form-control-feedback",
-        "aria-hidden" : "true"
+    element.children('span.glyphicon').remove();
+    element.append($('<span/>', {
+        'class' : 'glyphicon ' + icon + ' form-control-feedback',
+        'aria-hidden' : 'true'
     }));
 };
 
 showError = function(message) {
-    var button = $("<button/>", {
-        "type" : "button",
-        "class" : "close",
-        "data-dismiss" : "alert"
-    }).append($("<span/>", {
-        "text" : "×",
-        "aria-hidden" : "true"
-    })).append($("<span/>", {
-        "class" : "sr-only",
-        "text" : "Close"
+    var button = $('<button/>', {
+        'type' : 'button',
+        'class' : 'close',
+        'data-dismiss' : 'alert'
+    }).append($('<span/>', {
+        'text' : '×',
+        'aria-hidden' : 'true'
+    })).append($('<span/>', {
+        'class' : 'sr-only',
+        'text' : 'Close'
     }));
 
-    var icon = $("<span/>", {
-        "class" : "glyphicon glyphicon-exclamation-sign",
-        "aria-hidden" : "true"
+    var icon = $('<span/>', {
+        'class' : 'fa fa-exclamation-circle',
+        'aria-hidden' : 'true'
     });
 
-    $("<div/>", {
-        "class" : "alert alert-danger alert-dismissible"
-    }).append(icon).append("<span> " + message + "</span>").append(button).prependTo($("form"));
+    $('<div/>', {
+        'class' : 'alert alert-danger alert-dismissible'
+    }).append(icon).append('<span> ' + message + '</span>').append(button).prependTo($('form'));
 };

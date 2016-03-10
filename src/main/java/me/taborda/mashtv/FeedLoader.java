@@ -15,7 +15,7 @@ public class FeedLoader {
 
     @Scheduled(fixedDelay = 60 * 60 * 1000)
     public void loadFeeds() {
-        for (Feed f : feeds.getAll()) {
+        for (Feed f : feeds.findAll()) {
             feeds.load(f) ;
         }
     }

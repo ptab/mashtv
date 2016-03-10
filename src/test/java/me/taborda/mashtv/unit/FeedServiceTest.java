@@ -3,11 +3,11 @@ package me.taborda.mashtv.unit ;
 import static org.mockito.Mockito.verifyNoMoreInteractions ;
 import static org.mockito.Mockito.when ;
 
+import me.taborda.mashtv.AbstractUnitTest;
 import org.junit.Test ;
 import org.mockito.InjectMocks ;
 import org.mockito.Mock ;
 
-import me.taborda.mashtv.AbstractUnitTest ;
 import me.taborda.mashtv.model.Feed ;
 import me.taborda.mashtv.repository.FeedRepository ;
 import me.taborda.mashtv.service.EpisodeService ;

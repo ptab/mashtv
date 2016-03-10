@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import me.taborda.mashtv.Util;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -58,7 +58,7 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
         this.show = show;
         this.season = season;
         this.episode = episode;
-        this.title = Util.fixTitle(title);
+        setTitle(title);
     }
 
     /*
@@ -81,8 +81,12 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
         return title;
     }
 
-    public void setTitle(final String title) {
-        this.title = Util.fixTitle(title);
+    public void setTitle(@NotNull final String title) {
+        if (StringUtils.isEmpty(title)) {
+            this.title = UNKNOWN_TITLE;
+        } else {
+            this.title = title;
+        }
     }
 
     public Set<MagnetLink> getMagnetLinks() {

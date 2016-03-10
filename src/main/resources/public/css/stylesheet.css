@@ -7,3 +7,23 @@ div.container > table {
 footer {
     margin-top: 50px;
 }
+
+.panel-heading {
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+}
+
+td > a {
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}

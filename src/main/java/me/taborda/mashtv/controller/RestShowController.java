@@ -49,7 +49,7 @@ public class RestShowController extends RestBaseController {
         return show ;
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{show}", method = RequestMethod.DELETE)
     public void delete(@ModelAttribute final Show show) {
         shows.delete(show) ;
         LOG.info("Removed TV Show: {}", show) ;

@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EpisodeInfo {
-    private static final Logger LOG = LoggerFactory.getLogger(EpisodeInfo.class) ;
+public class EpisodeDetailsFetcher {
+    private static final Logger LOG = LoggerFactory.getLogger(EpisodeDetailsFetcher.class) ;
 
     private static final String EPISODE_INFO_URL = "http://services.tvrage.com/tools/quickinfo.php?show=%s&ep=%sx%s" ;
 
