@@ -1,4 +1,4 @@
-package me.taborda.mashtv.controller ;
+package me.taborda.mashtv.api;
 
 import java.util.List;
 import javax.validation.constraints.NotNull;

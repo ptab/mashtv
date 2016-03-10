@@ -10,6 +10,7 @@ public abstract class AbstractUnitTest extends AbstractTest {
 
     @Before
     public void setup() {
-        MockitoAnnotations.initMocks(getClass()) ;
+        MockitoAnnotations.initMocks(getClass());
     }
+
 }

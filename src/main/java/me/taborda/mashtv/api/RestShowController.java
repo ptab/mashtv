@@ -1,4 +1,4 @@
-package me.taborda.mashtv.controller ;
+package me.taborda.mashtv.api;
 
 import java.util.List ;
 import java.util.Set ;
@@ -55,29 +55,24 @@ public class RestShowController extends RestBaseController {
         LOG.info("Removed TV Show: {}", show) ;
     }
 
-    @RequestMapping(value = "/{show}/episodes", method = RequestMethod.GET)
-    public List<Episode> listEpisodes(@ModelAttribute final Show show) {
-        return show.getEpisodes() ;
-    }
-
-    @RequestMapping(value = "/{show}/episodes/{season}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{show}/{season}", method = RequestMethod.GET)
     public List<Episode> listEpisodes(@ModelAttribute final Show show, @PathVariable final Integer season) {
         return show.getEpisodes(season) ;
     }
 
-    @RequestMapping(value = "/{show}/episodes/{season}/{episode}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{show}/{season}/{episode}", method = RequestMethod.GET)
     public Episode getEpisode(@ModelAttribute final Show show, @PathVariable final Integer season, @PathVariable final Integer episode) {
         return show.getEpisode(season, episode) ;
     }
 
-    @RequestMapping(value = "/{show}/episodes/{season}/{episode}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{show}/{season}/{episode}", method = RequestMethod.DELETE)
     public void delete(@ModelAttribute final Show show, @PathVariable final Integer season, @PathVariable final Integer episode) {
         Episode e = show.getEpisode(season, episode) ;
         episodes.delete(e) ;
         LOG.info("Removed episode: {}", e) ;
     }
 
-    @RequestMapping(value = "/{show}/episodes/{season}/{episode}/links", method = RequestMethod.GET)
+    @RequestMapping(value = "/{show}/{season}/{episode}/links", method = RequestMethod.GET)
     public Set<MagnetLink> torrents(@ModelAttribute final Show show, @PathVariable final Integer season, @PathVariable final Integer episode) {
         return show.getEpisode(season, episode).getMagnetLinks() ;
     }

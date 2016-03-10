@@ -1,6 +1,0 @@
-Show ID@24493
-Show Name@Game of Thrones
-Show URL@http://www.tvrage.com/Game_of_Thrones
-Premiered@2010
-Started@Dec/10/2010
-Ended@

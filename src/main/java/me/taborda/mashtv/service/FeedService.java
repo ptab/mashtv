@@ -13,6 +13,7 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
+import me.taborda.mashtv.enricher.DetailsEnricher;
 import me.taborda.mashtv.exception.NonUniqueException;
 import me.taborda.mashtv.model.Episode;
 import me.taborda.mashtv.model.Feed;
@@ -53,6 +54,9 @@ public class FeedService {
 
     @Autowired
     private EpisodeService episodes;
+
+    @Autowired
+    private DetailsEnricher enricher;
 
     @Transactional(readOnly = true)
     public List<Feed> findAll() {
@@ -133,10 +137,7 @@ public class FeedService {
         boolean hd = HD_PATTERN.matcher(entry.getTitle()).matches();
         episode.addMagnetLink(entry.getLink(), entry.getTitle(), hd);
 
-        if (episode.isTitleUnknown()) {
-            episodes.updateTitle(episode);
-        }
-
+        enricher.enrich(episode);
         episodes.save(episode);
     }
 

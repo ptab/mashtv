@@ -1,7 +1,6 @@
 package me.taborda.mashtv.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -14,7 +13,6 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import me.taborda.mashtv.exception.EpisodeNotFoundException;
-import org.apache.commons.lang3.text.WordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +21,9 @@ public class Show extends AbstractEntity implements Comparable<Show> {
 
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LoggerFactory.getLogger(Show.class);
+    public static final int NO_ID = -1 ;
+
+    private int traktId = NO_ID ;
 
     @Column(unique = true)
     @NotNull
@@ -37,20 +38,28 @@ public class Show extends AbstractEntity implements Comparable<Show> {
     }
 
     public Show(@NotNull final String title) {
-        this.title = WordUtils.capitalizeFully(title).trim();
+        this.title = title;
+    }
+
+    public int getTraktId() {
+        return traktId;
+    }
+
+    public void setTraktId(int traktId) {
+        this.traktId = traktId;
     }
 
     public String getTitle() {
         return title;
     }
 
+    public void setTitle(@NotNull String title) {
+        this.title = title;
+    }
+
     @JsonIgnore
     public List<Integer> getSeasons() {
         return episodes.stream().map(Episode::getSeason).distinct().sorted().collect(Collectors.toList());
-    }
-
-    public List<Episode> getEpisodes() {
-        return Collections.unmodifiableList(episodes);
     }
 
     public List<Episode> getEpisodes(int season) {

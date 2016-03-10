@@ -1,26 +1,29 @@
 package me.taborda.mashtv.integration ;
 
-import static org.junit.Assert.assertEquals ;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.when;
 
-import java.util.ArrayList ;
-import java.util.Collections ;
-import java.util.List ;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import me.taborda.mashtv.AbstractIntegrationTest;
-import org.junit.After ;
-import org.junit.Test ;
-import org.springframework.beans.factory.annotation.Autowired ;
-import org.springframework.data.domain.Sort ;
-import org.springframework.data.domain.Sort.Direction ;
-
+import me.taborda.mashtv.enricher.trakt.TraktClient;
 import me.taborda.mashtv.exception.NonUniqueException;
-import me.taborda.mashtv.model.Episode ;
-import me.taborda.mashtv.model.Feed ;
-import me.taborda.mashtv.model.Show ;
-import me.taborda.mashtv.repository.EpisodeRepository ;
-import me.taborda.mashtv.repository.FeedRepository ;
-import me.taborda.mashtv.repository.ShowRepository ;
-import me.taborda.mashtv.service.FeedService ;
+import me.taborda.mashtv.model.Episode;
+import me.taborda.mashtv.model.Feed;
+import me.taborda.mashtv.model.Show;
+import me.taborda.mashtv.repository.EpisodeRepository;
+import me.taborda.mashtv.repository.FeedRepository;
+import me.taborda.mashtv.repository.ShowRepository;
+import me.taborda.mashtv.service.FeedService;
+import org.junit.After;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 
 public class FeedServiceIntegrationTest extends AbstractIntegrationTest {
 
@@ -42,6 +45,9 @@ public class FeedServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private EpisodeRepository episodes ;
+
+    @Autowired
+    private TraktClient mockTraktClient ;
 
     @After
     public void cleanup() {
@@ -65,6 +71,7 @@ public class FeedServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void load() throws Exception {
+        when(mockTraktClient.getEpisode(anyInt(), anyInt(), anyInt())).thenReturn(Optional.empty()) ;
         test("game-of-thrones", "Game of Thrones", EPISODES_GAME_OF_THRONES) ;
         test("modern-family", "Modern Family", EPISODES_MODERN_FAMILY) ;
     }

@@ -27,7 +27,7 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
 
     private static final Logger LOG = LoggerFactory.getLogger(Episode.class);
 
-    private static final String UNKNOWN_TITLE = "Unknown title";
+    public static final String UNKNOWN_TITLE = "Unknown title";
 
     @JsonIgnore
     @ManyToOne(optional = false)
