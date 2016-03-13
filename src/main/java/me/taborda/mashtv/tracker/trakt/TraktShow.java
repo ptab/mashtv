@@ -1,4 +1,4 @@
-package me.taborda.mashtv.enricher.trakt;
+package me.taborda.mashtv.tracker.trakt;
 
 public class TraktShow {
 
@@ -14,6 +14,10 @@ public class TraktShow {
 
     public String getTitle() {
         return title;
+    }
+
+    public int getYear() {
+        return year;
     }
 
     class Images {

@@ -1,4 +1,4 @@
-package me.taborda.mashtv.api;
+package me.taborda.mashtv.controller.api;
 
 import static springfox.documentation.builders.PathSelectors.regex;
 

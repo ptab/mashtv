@@ -1,10 +1,15 @@
-package me.taborda.mashtv.enricher.trakt;
+package me.taborda.mashtv.tracker.trakt;
 
 public class TestTraktShow extends TraktShow {
 
     public TestTraktShow withTitle(String title) {
         this.title = title;
         return this;
+    }
+
+    public TestTraktShow withYear(int year) {
+        this.year = year ;
+        return this ;
     }
 
     public TestTraktShow withTraktId(int traktId) {

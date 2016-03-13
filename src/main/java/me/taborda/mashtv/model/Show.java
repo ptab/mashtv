@@ -23,6 +23,7 @@ public class Show extends AbstractEntity implements Comparable<Show> {
     private static final Logger LOG = LoggerFactory.getLogger(Show.class);
     public static final int NO_ID = -1 ;
 
+    @Column
     private int traktId = NO_ID ;
 
     @Column(unique = true)

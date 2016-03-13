@@ -7,23 +7,25 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"/>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.6/flatly/bootstrap.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" th:href="@{/css/typeaheadjs.css}" />
     <link rel="stylesheet" th:href="@{/css/stylesheet.css}" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script th:src="@{/js/application.js}"></script>    
+    <script src="http://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.min.js"></script>
+    <script th:src="@{/js/application.js}"></script>
     <script th:src="@{/js/shows.js}"></script>
 </head>           
 <body>
     <div th:replace="fragments/navigation :: navigation(shows)"></div>
 
-    <div class="container">      
+    <div class="container">
         <form th:action="@{/api/shows}" method="post" class="form-inline">
-            <div class="form-group">
-                <input name="title" type="text" class="form-control" placeholder="Enter a show title" />
+            <div id="show-input" class="form-group">
+                <input name="title" type="text" class="typeahead form-control" placeholder="Enter a show title" />
             </div>
             <button type="submit" class="btn btn-success">Add show</button>
         </form>
-        
+
         <table class="table table-striped table-hover"></table>
     </div>
     

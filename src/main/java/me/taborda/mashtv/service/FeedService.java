@@ -13,7 +13,7 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
-import me.taborda.mashtv.enricher.DetailsEnricher;
+import me.taborda.mashtv.tracker.ShowDetailsEnricher;
 import me.taborda.mashtv.exception.NonUniqueException;
 import me.taborda.mashtv.model.Episode;
 import me.taborda.mashtv.model.Feed;
@@ -56,7 +56,7 @@ public class FeedService {
     private EpisodeService episodes;
 
     @Autowired
-    private DetailsEnricher enricher;
+    private ShowDetailsEnricher enricher;
 
     @Transactional(readOnly = true)
     public List<Feed> findAll() {
@@ -128,7 +128,7 @@ public class FeedService {
     private void processEntry(final SyndEntry entry, final MatchedEntry details) {
         Optional<Show> show = shows.find(details.show);
         if (!show.isPresent()) {
-            LOG.debug("Not on the list: {} ({})", details.show, entry.getTitle());
+            LOG.debug("Not on the list: {} - {}", details.show, entry.getTitle());
             return;
         }
 

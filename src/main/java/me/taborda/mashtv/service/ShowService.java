@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import javax.annotation.Resource;
 
-import me.taborda.mashtv.enricher.DetailsEnricher;
+import me.taborda.mashtv.tracker.ShowDetailsEnricher;
+import me.taborda.mashtv.tracker.trakt.TraktClient;
+import me.taborda.mashtv.tracker.trakt.TraktShow;
 import me.taborda.mashtv.exception.NonUniqueException;
 import me.taborda.mashtv.model.Show;
 import me.taborda.mashtv.repository.ShowRepository;
@@ -16,7 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class ShowService {
 
     @Autowired
-    private DetailsEnricher enricher;
+    private ShowDetailsEnricher enricher;
+
+    @Autowired
+    private TraktClient traktClient ;
 
     @Resource
     private ShowRepository repository;

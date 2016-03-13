@@ -8,10 +8,10 @@ import java.util.Collections;
 import java.util.Optional;
 
 import me.taborda.mashtv.AbstractUnitTest;
-import me.taborda.mashtv.enricher.DetailsEnricher;
-import me.taborda.mashtv.enricher.trakt.TestTraktEpisode;
-import me.taborda.mashtv.enricher.trakt.TestTraktShow;
-import me.taborda.mashtv.enricher.trakt.TraktClient;
+import me.taborda.mashtv.tracker.ShowDetailsEnricher;
+import me.taborda.mashtv.tracker.trakt.TestTraktEpisode;
+import me.taborda.mashtv.tracker.trakt.TestTraktShow;
+import me.taborda.mashtv.tracker.trakt.TraktClient;
 import me.taborda.mashtv.model.Episode;
 import me.taborda.mashtv.model.Show;
 import org.junit.Rule;
@@ -28,7 +28,7 @@ public class DetailsEnricherTest extends AbstractUnitTest {
     private static final String EXPECTED_EPISODE_TITLE = "Winter is Coming";
 
     @InjectMocks
-    private DetailsEnricher victim;
+    private ShowDetailsEnricher victim;
 
     @Mock
     private TraktClient traktClient;
@@ -39,7 +39,7 @@ public class DetailsEnricherTest extends AbstractUnitTest {
     @Test
     public void shouldEnrichShowWhenTitleIsFound() {
         Show s = new Show(SHOW_TITLE);
-        when(traktClient.findShow(SHOW_TITLE)).thenReturn(Collections.singletonList(new TestTraktShow().withTitle(EXPECTED_SHOW_TITLE).withTraktId(SHOW_TRAKTID)));
+        when(traktClient.findShowsMatching(SHOW_TITLE)).thenReturn(Collections.singletonList(new TestTraktShow().withTitle(EXPECTED_SHOW_TITLE).withTraktId(SHOW_TRAKTID)));
         victim.enrich(s);
         assertEquals(EXPECTED_SHOW_TITLE, s.getTitle()) ;
         assertEquals(SHOW_TRAKTID, s.getTraktId()) ;
@@ -48,7 +48,7 @@ public class DetailsEnricherTest extends AbstractUnitTest {
     @Test
     public void shouldNotEnrichShowWhenTitleIsNotFound() {
         Show s = new Show(SHOW_TITLE);
-        when(traktClient.findShow(anyString())).thenReturn(Collections.emptyList());
+        when(traktClient.findShowsMatching(anyString())).thenReturn(Collections.emptyList());
         victim.enrich(s);
         assertEquals(SHOW_TITLE, s.getTitle()) ;
         assertEquals(Show.NO_ID, s.getTraktId());

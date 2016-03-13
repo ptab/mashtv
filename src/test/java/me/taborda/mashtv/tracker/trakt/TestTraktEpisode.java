@@ -1,4 +1,4 @@
-package me.taborda.mashtv.enricher.trakt;
+package me.taborda.mashtv.tracker.trakt;
 
 public class TestTraktEpisode extends TraktEpisode {
 

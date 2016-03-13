@@ -1,4 +1,4 @@
-package me.taborda.mashtv.enricher.trakt;
+package me.taborda.mashtv.tracker.trakt;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -20,7 +20,7 @@ public class TraktClient {
 
     private final TraktService trakt = buildClient();
 
-    public List<TraktShow> findShow(String query) {
+    public List<TraktShow> findShowsMatching(String query) {
         try {
             Response<List<TraktSearchResult>> response = trakt.findShow(query).execute();
             if (response.isSuccess()) {

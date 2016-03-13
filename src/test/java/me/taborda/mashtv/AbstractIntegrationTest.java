@@ -1,7 +1,8 @@
 package me.taborda.mashtv;
 
-import me.taborda.mashtv.enricher.DetailsEnricher;
-import me.taborda.mashtv.enricher.trakt.TraktClient;
+import me.taborda.mashtv.tracker.ShowDetailsEnricher;
+import me.taborda.mashtv.tracker.ShowFinder;
+import me.taborda.mashtv.tracker.trakt.TraktClient;
 import org.mockito.Mockito;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -23,9 +24,15 @@ public abstract class AbstractIntegrationTest extends AbstractTest {
         }
 
         @Bean
-        public DetailsEnricher detailsEnricher() {
-            return new DetailsEnricher();
+        public ShowDetailsEnricher detailsEnricher() {
+            return new ShowDetailsEnricher();
         }
+
+        @Bean
+        public ShowFinder showFinder() {
+            return new ShowFinder();
+        }
+
     }
 
 }

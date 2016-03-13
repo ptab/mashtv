@@ -2,7 +2,7 @@
 
 ### TODO
 #### Features
-* tvrage is gone, implement some other service (tvbd?)
+* tvrage is gone, implement some other service (trakt?)
 * select shows from a list based on input
 * enrich show page with show details
 * add link to /swagger-ui.html

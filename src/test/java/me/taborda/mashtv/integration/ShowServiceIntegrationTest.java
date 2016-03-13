@@ -8,8 +8,8 @@ import static org.mockito.Mockito.when;
 import java.util.Collections;
 
 import me.taborda.mashtv.AbstractIntegrationTest;
-import me.taborda.mashtv.enricher.trakt.TestTraktShow;
-import me.taborda.mashtv.enricher.trakt.TraktClient;
+import me.taborda.mashtv.tracker.trakt.TestTraktShow;
+import me.taborda.mashtv.tracker.trakt.TraktClient;
 import me.taborda.mashtv.exception.NonUniqueException;
 import me.taborda.mashtv.model.Show;
 import me.taborda.mashtv.repository.ShowRepository;
@@ -38,7 +38,7 @@ public class ShowServiceIntegrationTest extends AbstractIntegrationTest {
     public void addShowWithEnrichment() {
         String title = "a sHoW tiTle";
         String expectedTitle = "A Show Title";
-        when(traktClient.findShow(title)).thenReturn(Collections.singletonList(new TestTraktShow().withTitle(expectedTitle)));
+        when(traktClient.findShowsMatching(title)).thenReturn(Collections.singletonList(new TestTraktShow().withTitle(expectedTitle)));
 
         Show show = victim.add(title);
         assertEquals(expectedTitle, show.getTitle());

@@ -2,6 +2,7 @@ package me.taborda.mashtv.model;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -15,8 +16,6 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -117,21 +116,16 @@ public class Episode extends AbstractEntity implements Comparable<Episode> {
     }
 
     @Override
-    public int hashCode() {
-        return new HashCodeBuilder().append(show).append(season).append(episode).toHashCode();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Episode)) return false;
+        Episode e = (Episode) o;
+        return season == e.season && episode == e.episode && Objects.equals(show, e.show);
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof Episode)) {
-            return false;
-        }
-
-        Episode other = (Episode) obj;
-        return new EqualsBuilder().append(show, other.getShow()).append(season, other.getSeason()).append(episode, other.getEpisode()).build();
+    public int hashCode() {
+        return Objects.hash(show, season, episode);
     }
 
     @Override

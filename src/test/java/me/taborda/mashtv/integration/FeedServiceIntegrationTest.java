@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import me.taborda.mashtv.AbstractIntegrationTest;
-import me.taborda.mashtv.enricher.trakt.TraktClient;
+import me.taborda.mashtv.tracker.trakt.TraktClient;
 import me.taborda.mashtv.exception.NonUniqueException;
 import me.taborda.mashtv.model.Episode;
 import me.taborda.mashtv.model.Feed;
